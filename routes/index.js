@@ -6,7 +6,11 @@ const { catchErrors } = require('../handlers/errorHandlers');
 
 // Routes
 
+router.get('/', (req, res) => {
+	res.render('home', { title: 'Welcome to Matcha' })
+});
 
 // API ?
 
+// Export
 module.exports = router;

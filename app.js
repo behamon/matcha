@@ -5,14 +5,14 @@ const MongoStore = require('connect-mongo')(session);
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const passport = require('passport');
 const promisify = require('es6-promisify');
 const flash = require('connect-flash');
-const expressValidator = require('express-validator');
 const routes = require('./routes/index');
-const helpers = require('./helpers'); // investigate
+const helpers = require('./handlers/helpers'); // investigate
 const errorHandlers = require('./handlers/errorHandlers'); //investigate
-require('./handlers/passport');
+// FORBIDDEN const passport = require('passport');
+// FORBIDDEN const expressValidator = require('express-validator');
+// require('./handlers/passport');
 
 const app = express();
 
@@ -20,13 +20,13 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// ? app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Utility to validate data
-app.use(expressValidator());
+// FORBIDDEN app.use(expressValidator());
 
 // Session Management using MongoDB
 app.use(session({
@@ -38,16 +38,16 @@ app.use(session({
 }));
 
 // Handle logins with passport
-app.use(passport.initialize());
-app.use(passport.session());
+// FORBIDDEN app.use(passport.initialize());
+// FORBIDDEN app.use(passport.session());
 
 // Flash middleware to use req.flash()
-app.use(flash());
+// TODO app.use(flash());
 
 // Passing variables to templates + all requests
 app.use((req, res, next) => {
   res.locals.h = helpers;
-  res.locals.flashes = req.flash();
+  // res.locals.flashes = req.flash();
   res.locals.user = req.user || null;
   res.locals.currentPath = req.path;
   next();
@@ -66,7 +66,7 @@ app.use('/', routes);
 app.use(errorHandlers.notFound);
 
 // One of our error handlers will see if these errors are just validation errors
-app.use(errorHandlers.flashValidationErrors);
+// app.use(errorHandlers.flashValidationErrors); To implement?
 
 // Otherwise this was a really bad error we didn't expect! Shoot eh
 if (app.get('env') === 'development') {

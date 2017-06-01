@@ -1,16 +1,65 @@
 doctype html
 html
-  head
-    title= `${title} | ${h.siteName}`
-    link(rel='stylesheet', href='/public/css/layout.css')
-    link(rel="shortcut icon" type="image/png" href="/assets/heart.png")
-    meta(name="viewport" content="width=device-width, initial-scale=1")
+	head
+		title= `${title} | ${h.siteName}`
+		link(rel='stylesheet', href='bulma/css/bulma.css')
+		link(rel='stylesheet', href='css/layout.css')
+		link(rel="shortcut icon" type="image/png" href="/assets/heart.png")
+		meta(name="viewport" content="width=device-width, initial-scale=1")
+		script(src="javascript/jquery-3.2.1.js")
+		script(src="javascript/site.js")
 	body
 		block header
-		
+			nav.nav.has-shadow(style="height: 80px")
+				.nav-left
+					a.nav-item(href="/")
+						img(src="assets/matcha.png" style="max-height: 2.5rem" alt="home")
+
+				- const user = 0
+				.nav-center.is-hidden-mobile
+					if user
+						a.nav-item(href="/") Home
+						a.nav-item(href="/browse") Browse
+						a.nav-item(href="/myprofile") My Profile
+						a.nav-item(href="/notifications") Notifications
+						a.nav-item(href="/messages") Messages
+				.nav-right.nav-menu
+					if !user
+						a.nav-item(href="/signup") Sign-Up
+						a.nav-item(href="/login") Login
+					else
+						form.field.has-addons#m--search(method="POST" action="#")
+							p.control
+								input.input(type="text" placeholder="Find user")
+							p.control
+								input.input(type="submit" name="search" value="Search")
+						a.nav-item(href="#") Log-Out
+
+				span.nav-toggle#nav-toggle
+					span
+					span
+					span
+				.nav-right.nav-menu#nav-menu
+					a.nav-item(href="/") Home
+					a.nav-item(href="/browse") Browse
+					a.nav-item(href="/myprofile") My Profile
+					a.nav-item(href="/notifications") Notifications
+					a.nav-item(href="/messages") Messages
+					if user
+						a.nav-item(href="/logout") Log-Out
+					else
+						a.nav-item(href="/signup") Sign-Up
+						a.nav-item(href="/login") Login
+
+
 		block messages
-		
-		.content
-			block content
-		
+			section.hero.is-info
+				.hero-body
+					.container
+						h1.title Home
+						if !user
+							h2.subtitle Please Login or Sign-Up to meet people !
+
+		block content
+
 		block scripts
