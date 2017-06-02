@@ -1,0 +1,14 @@
+extends layout
+
+include mixins/_signupForm
+
+block messages
+	section.hero.is-info
+		.hero-body
+			.container
+				h1.title Sign-Up
+				if !user
+					h2.subtitle One more step towards finding the love of your life !
+
+block content
+	+signupForm()

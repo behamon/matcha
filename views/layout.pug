@@ -9,6 +9,9 @@ html
 		script(src="javascript/jquery-3.2.1.js")
 		script(src="javascript/site.js")
 	body
+
+		include mixins/_navMenu
+
 		block header
 			nav.nav.has-shadow(style="height: 80px")
 				.nav-left
@@ -18,11 +21,7 @@ html
 				- const user = 0
 				.nav-center.is-hidden-mobile
 					if user
-						a.nav-item(href="/") Home
-						a.nav-item(href="/browse") Browse
-						a.nav-item(href="/myprofile") My Profile
-						a.nav-item(href="/notifications") Notifications
-						a.nav-item(href="/messages") Messages
+						+navMenu()
 				.nav-right.nav-menu
 					if !user
 						a.nav-item(href="/signup") Sign-Up
@@ -39,12 +38,9 @@ html
 					span
 					span
 					span
-				.nav-right.nav-menu#nav-menu
-					a.nav-item(href="/") Home
-					a.nav-item(href="/browse") Browse
-					a.nav-item(href="/myprofile") My Profile
-					a.nav-item(href="/notifications") Notifications
-					a.nav-item(href="/messages") Messages
+
+				.nav-right.nav-menu#nav-menu.is-hidden-tablet
+					+navMenu()
 					if user
 						a.nav-item(href="/logout") Log-Out
 					else
@@ -59,6 +55,15 @@ html
 						h1.title Home
 						if !user
 							h2.subtitle Please Login or Sign-Up to meet people !
+
+		block flashes
+			if locals.flashes
+				.column.is-half.is-offset-one-quarter
+					- const categories = Object.keys(locals.flashes)
+					each category in categories
+						each message in flashes[category]
+							.notification(class=`${category}`)!= message
+								button.delete(onClick="this.parentElement.remove()")
 
 		block content
 

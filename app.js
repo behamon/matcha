@@ -10,8 +10,6 @@ const flash = require('connect-flash');
 const routes = require('./routes/index');
 const helpers = require('./handlers/helpers'); // investigate
 const errorHandlers = require('./handlers/errorHandlers'); //investigate
-// FORBIDDEN const passport = require('passport');
-// FORBIDDEN const expressValidator = require('express-validator');
 // require('./handlers/passport');
 
 const app = express();
@@ -25,9 +23,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Utility to validate data
-// FORBIDDEN app.use(expressValidator());
-
 // Session Management using MongoDB
 app.use(session({
   secret: process.env.SECRET,
@@ -37,17 +32,13 @@ app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
-// Handle logins with passport
-// FORBIDDEN app.use(passport.initialize());
-// FORBIDDEN app.use(passport.session());
-
 // Flash middleware to use req.flash()
-// TODO app.use(flash());
+app.use(flash());
 
 // Passing variables to templates + all requests
 app.use((req, res, next) => {
   res.locals.h = helpers;
-  // res.locals.flashes = req.flash();
+  res.locals.flashes = req.flash();
   res.locals.user = req.user || null;
   res.locals.currentPath = req.path;
   next();
@@ -66,7 +57,7 @@ app.use('/', routes);
 app.use(errorHandlers.notFound);
 
 // One of our error handlers will see if these errors are just validation errors
-// app.use(errorHandlers.flashValidationErrors); To implement?
+app.use(errorHandlers.flashValidationErrors);
 
 // Otherwise this was a really bad error we didn't expect! Shoot eh
 if (app.get('env') === 'development') {

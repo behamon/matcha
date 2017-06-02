@@ -1,0 +1,20 @@
+mixin signupForm()
+	.column.is-one-third.is-offset-one-third
+		form.field(action="/signup" method="POST")
+			label.label First Name
+			p.control
+				input.input(type="text" name="first_name")
+			label.label Last Name
+			p.control
+				input.input(type="text" name="last_name")
+			label.label E-mail
+			p.control
+				input.input(type="text" name="email")
+			label.label Password
+			p.control
+				input.input(type="password" name="password")
+			label.label Confirm Password
+			p.control
+				input.input(type="password" name="password_confirm")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="signup" value="Sign-Up" style="margin-top: 1rem")
