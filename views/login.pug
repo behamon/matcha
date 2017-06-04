@@ -1,0 +1,13 @@
+extends layout
+
+include mixins/_loginForm
+
+block messages
+	section.hero.is-info
+		.hero-body
+			.container
+				h1.title Login
+					h2.subtitle They are waiting for you.
+
+block content
+	+loginForm()

@@ -2,12 +2,17 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const promisify = require('es6-promisify');
 const hash = require('mhash');
+const mail = require('../handlers/mail');
 
 exports.signupForm = (req, res) => {
 	res.render('signup', {title: "Sign-Up"});
 };
 
-function escapeHtml () {
+exports.loginForm = (req, res) => {
+	res.render('login', {title: "Login"});
+};
+
+function escapeHtml(string) {
 	const entityMap = {
 	  '&': '&amp;',
 	  '<': '&lt;',
@@ -17,8 +22,6 @@ function escapeHtml () {
 	  '/': '&#x2F;',
 	  '`': '&#x60;',
 	  '=': '&#x3D;',
-		'(': 'z',
-		')':'z'
 	};
   return String(string).replace(/[&<>"'`=\/]/g, function (s) {
     return entityMap[s];
@@ -27,32 +30,42 @@ function escapeHtml () {
 
 exports.validateData = async (req, res, next) => {
 	const regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-	const errors = [];
+	const errs = [];
 
 	if (!regex.test(req.body.email))
-		errors.push('Invalid Email !');
+		errs.push('Invalid Email !');
 	if (req.body.password.length < 8)
-		errors.push('Password not strong enough. 8 Characters required.')
+		errs.push('Password not strong enough. 8 Characters required.')
 	if (req.body.password !== req.body.password_confirm)
-		errors.push('Passwords do not Match !');
+		errs.push('Passwords do not Match !');
 	else
 		req.body.password = hash("whirlpool", req.body.password);
 
 	const exists = await User.find({ email: req.body.email });
 	if (exists.length)
-		errors.push('A user with this email already exists');
+		errs.push('A user with this email already exists');
 
-	if (errors.length) {
-		req.flash('is-danger', errors);
+	if (errs.length) {
+		req.flash('is-danger', errs);
 		res.redirect('/signup');
 		return;
 	}
-	req.body = req.body.map(escapeHtml());
+	for (var input in req.body) {
+		if (req.body.hasOwnProperty(input) && (input === "first_name" || input === "last_name")) {
+			req.body[input] = escapeHtml(req.body[input]);
+		}
+	}
 	next();
 };
 
-exports.registerUser = async (req, res) => {
+exports.registerUser = async (req, res, next) => {
 	const user = await (new User(req.body)).save();
-	req.flash('is-success', `Account successfully created. A confirmation e-mail has been sent to ${user.email}`);
-	res.redirect('/');
+	if (!user) {
+		req.flash('is-warning', `Something went wrong. Please try again later.`);
+		res.redirect('/signup');
+		return;
+	}
+	await mail.send({ user, content: "Thanks for signing up on Matcha ! Enjoy !" });
+	req.flash('is-success', `Account successfully created. You can now login as <strong>${user.email}</strong>`);
+	res.redirect('/login');
 };

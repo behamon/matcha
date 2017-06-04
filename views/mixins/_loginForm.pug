@@ -1,0 +1,19 @@
+mixin loginForm()
+	.column.is-one-third.is-offset-one-third
+		form.field(action="/login" method="POST")
+			label.label E-mail
+			p.control
+				input.input.is-info(type="text" name="email")
+			label.label Password
+			p.control
+				input.input.is-info(type="password" name="password")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="login" value="Login" style="margin-top: 1rem")
+		hr.is-fullwidth
+		form.field.has-text-centered(action="/account/forgot" method="POST" style="margin-top: 3rem")
+			h5.title.is-4 Forgot your Password ?
+			label.label.has-text-left E-mail
+			p.control
+				input.input.is-info(type="text" name="email")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="forgot" value="Reset" style="margin-top: 1rem")

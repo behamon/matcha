@@ -2,12 +2,12 @@ doctype html
 html
 	head
 		title= `${title} | ${h.siteName}`
-		link(rel='stylesheet', href='bulma/css/bulma.css')
-		link(rel='stylesheet', href='css/layout.css')
+		link(rel='stylesheet', href='/bulma/css/bulma.css')
+		link(rel='stylesheet', href='/css/layout.css')
 		link(rel="shortcut icon" type="image/png" href="/assets/heart.png")
 		meta(name="viewport" content="width=device-width, initial-scale=1")
-		script(src="javascript/jquery-3.2.1.js")
-		script(src="javascript/site.js")
+		script(src="/javascript/jquery-3.2.1.js")
+		script(src="/javascript/site.js")
 	body
 
 		include mixins/_navMenu
@@ -16,12 +16,11 @@ html
 			nav.nav.has-shadow(style="height: 80px")
 				.nav-left
 					a.nav-item(href="/")
-						img(src="assets/matcha.png" style="max-height: 2.5rem" alt="home")
+						img(src="/assets/matcha.png" style="max-height: 2.5rem" alt="home")
 
-				- const user = 0
 				.nav-center.is-hidden-mobile
 					if user
-						+navMenu()
+						+navMenu(user)
 				.nav-right.nav-menu
 					if !user
 						a.nav-item(href="/signup") Sign-Up
@@ -32,7 +31,7 @@ html
 								input.input(type="text" placeholder="Find user")
 							p.control
 								input.input(type="submit" name="search" value="Search")
-						a.nav-item(href="#") Log-Out
+						a.nav-item(href="/logout") Log-Out
 
 				span.nav-toggle#nav-toggle
 					span
@@ -46,7 +45,6 @@ html
 					else
 						a.nav-item(href="/signup") Sign-Up
 						a.nav-item(href="/login") Login
-
 
 		block messages
 			section.hero.is-info
@@ -66,5 +64,12 @@ html
 								button.delete(onClick="this.parentElement.remove()")
 
 		block content
+
+		block footer
+			footer.footer
+				.container
+					.content.has-text-centered
+						strong Matcha Project
+						p Behamon - 42
 
 		block scripts

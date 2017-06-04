@@ -1,0 +1,20 @@
+extends layout
+
+block messages
+	section.hero.is-info
+		.hero-body
+			.container
+				h1.title Reset your Password
+					h2.subtitle Don't forget it this time !
+
+block content
+	.column.is-one-third.is-offset-one-third
+		form.field(method="POST")
+			label.label New Password
+			p.control
+				input.input.is-info(type="password" name="password")
+			label.label Confirm Password
+			p.control
+				input.input.is-info(type="password" name="password_confirm")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="reset" value="Reset" style="margin-top: 1rem")

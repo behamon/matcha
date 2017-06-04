@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
+const mhash = require('mhash');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 
 const userSchema = new mongoose.Schema({
@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
 		lowercase: true,
 		trim: true,
 		required: 'Email is required.'
+	},
+	hash: {
+		type: String
 	},
 	first_name: {
 		type: String,
@@ -27,6 +30,13 @@ const userSchema = new mongoose.Schema({
 	},
 	resetPasswordToken: String,
 	resetPasswordExpires: Date
+});
+
+userSchema.pre('save', function(next) {
+	if (!this.isModified('email'))
+		return next();
+	this.hash = mhash('md5', this.email);
+	next();
 });
 
 userSchema.plugin(mongodbErrorHandler);

@@ -2,3 +2,12 @@
 	margin-bottom: 0;
 	align-self: center;
 }
+
+footer {
+	position: absolute;
+	bottom: 0;
+	height: 1rem;
+	width: 100%;
+	padding-top: 1rem !important;
+	padding-bottom: 4rem !important;
+}
