@@ -1,6 +1,28 @@
 extends layout
 
-block content
-	h2 wp
+include mixins/_editPrivate
+include mixins/_editPublic
 
-	TODO
+block messages
+	section.hero.is-info
+		.hero-body
+			.container
+				h1.title Edit your Profile
+					h2.subtitle This is where you tell us more about you !
+
+
+block nav
+	nav.nav.has-shadow
+		.container
+			.nav-center
+				a.nav-item.is-tab#view(href=`/myprofile/view/${userdata.hash}`) Public Profile
+				a.nav-item.is-tab#public(href=`/myprofile/public/${userdata.hash}`) Edit My Profile
+				a.nav-item.is-tab#private(href=`/myprofile/private/${userdata.hash}`) Edit Account
+
+block content
+	if which === "private"
+		+editPrivate(userdata)
+	else if which === "public"
+		+editPublic(userdata)
+	else
+		p MY PROFILE

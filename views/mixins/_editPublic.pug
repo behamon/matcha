@@ -1,0 +1,42 @@
+mixin editPublic(userdata = {})
+	.column.is-half.is-offset-one-quarter
+		form.field(action=`/myprofile/public/${userdata.hash}` enctype="multipart/form-data" method="POST")
+			label.label You are:
+			p.control
+				span.select.is-info
+					select.is-info(name="sexe")
+						option A Man
+						option A Woman
+			label.label You are looking for:
+			p.control
+				span.select.is-info
+					select.is-info(name="orientation")
+						option A Woman
+						option A Man
+			label.label Bio
+			p.control
+			textarea.textarea.is-info(name="bio" placeholder="Who are you?")
+			p.control
+				label.checkbox  #bio
+				input.check(type="checkbox" name="bio")
+				label.checkbox  #geek
+				input.check(type="checkbox" name="geek")
+				label.checkbox  #electro
+				input.check(type="checkbox" name="electro")
+				label.checkbox  #chic
+				input.check(type="checkbox" name="fancy")
+				label.checkbox  #viande
+				input.check(type="checkbox" name="meat")
+			p.control
+				label.label(for="pic1") Main Picture
+				input.input.is-info(type="file" name="pic1" accept="image/*")
+				label.label(for="pic2") Second Picture
+				input.input.is-info(type="file" name="pic2" accept="image/*")
+				label.label(for="pic3") Third Picture
+				input.input.is-info(type="file" name="pic3" accept="image/*")
+				label.label(for="pic4") Fourth Picture
+				input.input.is-info(type="file" name="pic4" accept="image/*")
+				label.label(for="pic5") Fifth Picture
+				input.input.is-info(type="file" name="pic5" accept="image/*")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="edit" value="Save changes" style="margin-top: 1rem")

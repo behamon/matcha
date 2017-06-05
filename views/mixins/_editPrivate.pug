@@ -1,0 +1,24 @@
+mixin editPrivate(userdata = {})
+	.column.is-one-third.is-offset-one-third
+		form.field(action=`/myprofile/private/${userdata.hash}` method="POST")
+			label.label First Name
+			p.control
+				input.input.is-info(type="text" name="first_name" value=userdata.first_name)
+			label.label Last Name
+			p.control
+				input.input.is-info(type="text" name="last_name" value=userdata.last_name)
+			label.label E-mail
+			p.control
+				input.input.is-info(type="text" name="email" value=userdata.email)
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="edit" value="Save changes" style="margin-top: 1rem")
+			hr
+		form.field(action=`/myprofile/private/${userdata.hash}` method="POST")
+			label.label New Password
+			p.control
+				input.input.is-info(type="password" name="password")
+			label.label Confirm New Password
+			p.control
+				input.input.is-info(type="password" name="password_confirm")
+			p.control(style="text-align: center")
+				input.button.is-info#submit(type="submit" name="passChange" value="Change my Password" style="margin-top: 1rem")

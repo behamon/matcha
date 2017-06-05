@@ -80,7 +80,6 @@ exports.reset = async (req, res) => {
 };
 
 exports.confirmedPasswords = (req, res, next) => {
-	console.log(req.body);
 	if (req.body.password === req.body.password_confirm && req.body.password.length > 7)
 		return next();
 	req.flash('is-warning', 'Passwords do not match!');
@@ -103,3 +102,12 @@ exports.update = async (req, res) => {
 	req.flash('is-success', 'Password reset sucessful! You may now login');
 	res.redirect('/login');
 }
+
+exports.isCorrectUser = (req, res, next) => {
+	if (req.params.user !== req.session.user) {
+		req.flash('is-danger', 'You can only edit your profile !');
+		res.redirect('back');
+		return;
+	}
+	next();
+};

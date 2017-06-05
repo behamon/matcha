@@ -37,7 +37,11 @@ router.get('/browse',
 	browseController.showProfiles
 );
 
-router.get('/myprofile/:user', profilesController.editForm);
+router.get('/myprofile/:zone/:user', authController.isCorrectUser, catchErrors(profilesController.editForm));
+router.post('/myprofile/private/:user', authController.isCorrectUser, catchErrors(userController.editAccount));
+router.post('/myprofile/public/:user', authController.isCorrectUser, catchErrors(userController.editProfile));
+
+
 
 // API ?
 

@@ -4,10 +4,25 @@
 }
 
 footer {
-	position: absolute;
-	bottom: 0;
 	height: 1rem;
 	width: 100%;
 	padding-top: 1rem !important;
 	padding-bottom: 4rem !important;
+}
+
+a.nav-item.is-tab:hover {
+	border-bottom-color: #3273dc;
+}
+
+a.nav-item.is-tab.is-active {
+	border-bottom-color: #3273dc;
+	color: #3273dc;
+}
+
+.label {
+	margin-top: 0.8rem;
+}
+
+.check {
+	margin: 1.5rem 0.8rem 0.5rem 0.2rem;
 }

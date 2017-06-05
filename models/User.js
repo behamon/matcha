@@ -39,6 +39,8 @@ userSchema.pre('save', function(next) {
 	next();
 });
 
+// Might need virtual field, and autopopulate ?
+
 userSchema.plugin(mongodbErrorHandler);
 
 module.exports = mongoose.model('User', userSchema);
