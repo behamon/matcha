@@ -38,7 +38,7 @@ async function add_pic(pic, req, i) {
 	const name = `${uuid.v4()}.${extension}`;
 	req.body.photos[i] = name;
 	const photo = await jimp.read(pic.buffer);
-	await photo.resize(800, jimp.AUTO);
+	await photo.resize(500, jimp.AUTO);
 	await photo.write(`./public/users/${req.session.user}/${name}`);
 }
 

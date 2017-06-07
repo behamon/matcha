@@ -33,8 +33,13 @@ const userSchema = new mongoose.Schema({
 	sexe: String,
 	orientation: String,
 	bio: String,
+	age: Number,
 	tags: [String],
-	photos: [String]
+	photos: [String],
+	location: {
+		type: { type: String, default: 'Point' },
+		coordinates: [{ type: Number }]
+	}
 });
 
 userSchema.pre('save', function(next) {

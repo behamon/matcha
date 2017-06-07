@@ -47,7 +47,9 @@ html
 					.container
 						h1.title Home
 						if !user
-							h2.subtitle Please Login or Sign-Up to meet people !
+							h2.subtitle Please Login or Sign-Up to enjoy the website !
+						else
+							h2.subtitle Welcome, #{email}
 
 		block nav
 

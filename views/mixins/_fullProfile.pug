@@ -1,0 +1,19 @@
+mixin fullProfile(userdata = {})
+	.column.is-10.is-offset-1
+		.columns.box(style="margin-bottom: 1rem")
+			.column.is-one-third
+				.card
+					.card-image
+						figure.image
+							img#pp(src=`/users/${userdata.hash}/${userdata.photos[0]}` alt="photo")
+					.card-footer
+						a.card-footer-item(href="#" style="color: #3273dc") Like
+						a.card-footer-item(href="#" style="color: #3273dc") Message
+			footer.column.is-one-third
+					h2.title.is-3 #{userdata.first_name}  |  5★
+					p(style="margin-bottom: 5%") #{userdata.age} Years Old
+					each tag in userdata.tags
+						span.tag.is-warning(style="margin-right: 3px") #{tag}
+			.column.is-one-third
+				h2.title Bio
+				p #{userdata.bio}

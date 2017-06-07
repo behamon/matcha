@@ -1,6 +1,16 @@
 mixin editPublic(userdata = {})
 	.column.is-half.is-offset-one-quarter
 		form.field(action=`/myprofile/public/${userdata.hash}` enctype="multipart/form-data" method="POST")
+			label.label Your age
+			p.control
+				span.select.is-info
+					select.is-info(name="age")
+						- var i = 18;
+						while i < 40
+							if (userdata.age == i)
+								option(selected="selected")= i++
+							else
+								option= i++
 			label.label You are:
 			p.control
 				span.select.is-info

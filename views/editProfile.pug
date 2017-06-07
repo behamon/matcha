@@ -2,6 +2,7 @@ extends layout
 
 include mixins/_editPrivate
 include mixins/_editPublic
+include mixins/_fullProfile
 
 block messages
 	section.hero.is-info
@@ -31,4 +32,7 @@ block content
 	else if which === "public"
 		+editPublic(userdata)
 	else
-		p MY PROFILE
+		+fullProfile(userdata)
+
+block scripts
+	script(src="/javascript/myprofile.js")
