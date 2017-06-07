@@ -3,18 +3,18 @@ mixin signupForm()
 		form.field(action="/signup" method="POST")
 			label.label First Name
 			p.control
-				input.input.is-info(type="text" name="first_name")
+				input.input.is-info(type="text" name="first_name" required)
 			label.label Last Name
 			p.control
-				input.input.is-info(type="text" name="last_name")
+				input.input.is-info(type="text" name="last_name" required)
 			label.label E-mail
 			p.control
-				input.input.is-info(type="text" name="email")
+				input.input.is-info(type="text" name="email" required)
 			label.label Password
 			p.control
-				input.input.is-info(type="password" name="password")
+				input.input.is-info(type="password" name="password" required)
 			label.label Confirm Password
 			p.control
-				input.input.is-info(type="password" name="password_confirm")
+				input.input.is-info(type="password" name="password_confirm" required)
 			p.control(style="text-align: center")
 				input.button.is-info#submit(type="submit" name="signup" value="Sign-Up" style="margin-top: 1rem")

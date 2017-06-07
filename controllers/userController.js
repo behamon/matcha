@@ -73,8 +73,8 @@ exports.registerUser = async (req, res, next) => {
 const confirmedPasswords = (pw, pwc) => {
 	if (pw === pwc && pw.length > 7)
 		return true;
-	req.flash('is-warning', 'Passwords do not match!');
-	res.redirect('back');
+	else
+		return false;
 };
 
 exports.editAccount = async (req, res) => {
@@ -84,6 +84,10 @@ exports.editAccount = async (req, res) => {
 			user.password = hash('whirlpool', req.body.password);
 			await user.save();
 			req.flash('is-success', "Password changed successfully.");
+			res.redirect('back');
+		}
+		else {
+			req.flash('is-warning', 'Passwords do not match or are less than 8 characters.');
 			res.redirect('back');
 		}
 	}

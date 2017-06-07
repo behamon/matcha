@@ -17,8 +17,6 @@ html
 				.nav-left
 					a.nav-item(href="/")
 						img(src="/assets/matcha.png" style="max-height: 2.5rem" alt="home")
-
-				.nav-center.is-hidden-mobile
 					if user
 						+navMenu(user)
 				.nav-right.nav-menu
@@ -26,11 +24,8 @@ html
 						a.nav-item(href="/signup") Sign-Up
 						a.nav-item(href="/login") Login
 					else
-						form.field.has-addons#m--search(method="POST" action="#")
-							p.control
-								input.input(type="text" placeholder="Find user")
-							p.control
-								input.input(type="submit" name="search" value="Search")
+						a.nav-item.is-hidden-mobile(href=`/myprofile/view/${user}`)
+							button.button.is-medium.is-danger My Profile
 						a.nav-item(href="/logout") Log-Out
 
 				span.nav-toggle#nav-toggle

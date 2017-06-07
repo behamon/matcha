@@ -6,7 +6,7 @@ const { catchErrors } = require('../handlers/errorHandlers');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 const browseController = require('../controllers/browseController');
-const profilesController = require('../controllers/profilesController');
+const profileController = require('../controllers/profileController');
 
 // Routes
 
@@ -37,9 +37,14 @@ router.get('/browse',
 	browseController.showProfiles
 );
 
-router.get('/myprofile/:zone/:user', authController.isCorrectUser, catchErrors(profilesController.editForm));
+router.get('/myprofile/:zone/:user', authController.isCorrectUser, catchErrors(profileController.editForm));
 router.post('/myprofile/private/:user', authController.isCorrectUser, catchErrors(userController.editAccount));
-router.post('/myprofile/public/:user', authController.isCorrectUser, catchErrors(userController.editProfile));
+router.post('/myprofile/public/:user',
+	authController.isCorrectUser,
+	profileController.upload,
+	profileController.resize,
+ 	catchErrors(profileController.editProfile)
+);
 
 
 

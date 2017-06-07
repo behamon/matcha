@@ -7,8 +7,14 @@ block messages
 	section.hero.is-info
 		.hero-body
 			.container
-				h1.title Edit your Profile
+				h1.title Your Profile
+				- const page = currentPath.split('/')[2]
+				if page == "public"
 					h2.subtitle This is where you tell us more about you !
+				else if page == "private"
+					h2.subtitle You can change your password and edit your infos here.
+				else if page == "view"
+					h2.subtitle This is your profile as it appears for others users.
 
 
 block nav

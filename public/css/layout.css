@@ -19,10 +19,10 @@ a.nav-item.is-tab.is-active {
 	color: #3273dc;
 }
 
-.label {
-	margin-top: 0.8rem;
-}
-
 .check {
 	margin: 1.5rem 0.8rem 0.5rem 0.2rem;
+}
+
+.control {
+	margin-bottom: 1rem;
 }

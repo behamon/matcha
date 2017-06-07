@@ -5,38 +5,42 @@ mixin editPublic(userdata = {})
 			p.control
 				span.select.is-info
 					select.is-info(name="sexe")
-						option A Man
-						option A Woman
+						if userdata.sexe === "A Man"
+							option(selected="selected") A Man
+							option A Woman
+						else
+							option(selected="selected") A Woman
+							option A Man
 			label.label You are looking for:
 			p.control
 				span.select.is-info
 					select.is-info(name="orientation")
-						option A Woman
-						option A Man
+						if userdata.orientation === "A Man"
+							option(selected="selected") A Man
+							option A Woman
+						else
+							option(selected="selected") A Woman
+							option A Man
 			label.label Bio
 			p.control
-			textarea.textarea.is-info(name="bio" placeholder="Who are you?")
+				textarea.textarea.is-info(name="bio" placeholder="Who are you?")= userdata.bio
+
+			- const choices = ["#bio", "#geek", "#electro", "#fancy", "#meat"]
+			- const tags = userdata.tags || []
 			p.control
-				label.checkbox  #bio
-				input.check(type="checkbox" name="bio")
-				label.checkbox  #geek
-				input.check(type="checkbox" name="geek")
-				label.checkbox  #electro
-				input.check(type="checkbox" name="electro")
-				label.checkbox  #chic
-				input.check(type="checkbox" name="fancy")
-				label.checkbox  #viande
-				input.check(type="checkbox" name="meat")
+				label.label Tags
+				each choice in choices
+					label.checkbox(for=choice)= choice
+					input.check(type="checkbox" value=choice name="tags" checked=tags.includes(choice))
 			p.control
-				label.label(for="pic1") Main Picture
-				input.input.is-info(type="file" name="pic1" accept="image/*")
-				label.label(for="pic2") Second Picture
-				input.input.is-info(type="file" name="pic2" accept="image/*")
-				label.label(for="pic3") Third Picture
-				input.input.is-info(type="file" name="pic3" accept="image/*")
-				label.label(for="pic4") Fourth Picture
-				input.input.is-info(type="file" name="pic4" accept="image/*")
-				label.label(for="pic5") Fifth Picture
-				input.input.is-info(type="file" name="pic5" accept="image/*")
+				each i in [0, 1, 2, 3, 4]
+					.box
+						label.label(for="photo") Picture #{i + 1}
+						input.input.is-info(type="file" name=`photo-${i + 1}` accept="image/*")
+						if userdata.photos[i]
+							.card-image(style="margin-top: 5px")
+								figure.image
+									img(src=`/users/${userdata.hash}/${userdata.photos[i]}`)
+
 			p.control(style="text-align: center")
 				input.button.is-info#submit(type="submit" name="edit" value="Save changes" style="margin-top: 1rem")

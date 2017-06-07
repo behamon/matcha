@@ -29,7 +29,12 @@ const userSchema = new mongoose.Schema({
 		required: 'Password is required.'
 	},
 	resetPasswordToken: String,
-	resetPasswordExpires: Date
+	resetPasswordExpires: Date,
+	sexe: String,
+	orientation: String,
+	bio: String,
+	tags: [String],
+	photos: [String]
 });
 
 userSchema.pre('save', function(next) {
