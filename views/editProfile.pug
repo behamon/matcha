@@ -35,4 +35,5 @@ block content
 		+fullProfile(userdata)
 
 block scripts
+	script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&language=en&libraries=places`)
 	script(src="/javascript/myprofile.js")

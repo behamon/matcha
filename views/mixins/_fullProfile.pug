@@ -5,13 +5,14 @@ mixin fullProfile(userdata = {})
 				.card
 					.card-image
 						figure.image
-							img#pp(src=`/users/${userdata.hash}/${userdata.photos[0]}` alt="photo")
+							- var i = 0
+							img#pp(src=`/users/${userdata.hash}/${userdata.photos[i]}` alt="photo")
 					.card-footer
-						a.card-footer-item(href="#" style="color: #3273dc") Like
-						a.card-footer-item(href="#" style="color: #3273dc") Message
+						.card-footer-item#prev(style="color: #3273dc") Previous
+						.card-footer-item#next(style="color: #3273dc") Next
 			footer.column.is-one-third
 					h2.title.is-3 #{userdata.first_name}  |  5★
-					p(style="margin-bottom: 5%") #{userdata.age} Years Old
+					h2.subtitle #{userdata.age} Years Old, lives in #{userdata.location.loc}
 					each tag in userdata.tags
 						span.tag.is-warning(style="margin-right: 3px") #{tag}
 			.column.is-one-third

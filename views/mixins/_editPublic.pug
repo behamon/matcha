@@ -31,6 +31,16 @@ mixin editPublic(userdata = {})
 						else
 							option(selected="selected") A Woman
 							option A Man
+			label.label Address
+			p.control
+				input.input.is-info#addr(type="text", name="location[address]"
+				value=(userdata.location && userdata.location.address))
+				input#lng(type="text", name="location[coordinates][0]"
+				value=(userdata.location && userdata.location.coordinates[0]))
+				input#lat(type="text", name="location[coordinates][1]"
+				value=(userdata.location && userdata.location.coordinates[1]))
+				input#loc(type="text", name="location[loc]"
+				value=(userdata.location && userdata.location.loc))
 			label.label Bio
 			p.control
 				textarea.textarea.is-info(name="bio" placeholder="Who are you?")= userdata.bio

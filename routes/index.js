@@ -46,9 +46,9 @@ router.post('/myprofile/public/:user',
  	catchErrors(profileController.editProfile)
 );
 
-
-
 // API ?
+
+router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
 
 // Export
 module.exports = router;

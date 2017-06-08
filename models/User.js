@@ -38,7 +38,9 @@ const userSchema = new mongoose.Schema({
 	photos: [String],
 	location: {
 		type: { type: String, default: 'Point' },
-		coordinates: [{ type: Number }]
+		coordinates: [{ type: Number }],
+		address: { type: String },
+		loc: { type: String }
 	}
 });
 

@@ -48,7 +48,7 @@ exports.resize = async (req, res, next) => {
 	for (var key in req.files) {
 			var i = key.split('-')[1] - 1;
 			if (fs.existsSync(`./public/users/${req.session.user}/${user.photos[i]}`))
-				await fs.unlinkSync(`./public/users/${req.session.user}/${user.photos[i]}`);
+				fs.unlinkSync(`./public/users/${req.session.user}/${user.photos[i]}`);
 			add_pic(req.files[key][0], req, i);
 	}
 	next();
@@ -58,4 +58,16 @@ exports.editProfile = async (req, res) => {
 	const user = await User.findOneAndUpdate({ hash: req.params.user }, req.body).exec();
 	req.flash('is-success', 'Profile Successfully Edited.');
 	res.redirect('back');
+};
+
+exports.getNextPic = async (req, res) => {
+	const user = await User.findOne({ hash: req.session.user });
+	var n = user.photos.indexOf(req.query.act.split('/')[3]);
+	res.set('Content-Type', 'text/plain');
+	if (user.photos[n + 1] && req.query.which === "1")
+		res.send(`/users/${user.hash}/${user.photos[n + 1]}`);
+	else if (user.photos[n - 1] && req.query.which === "-1")
+		res.send(`/users/${user.hash}/${user.photos[n - 1]}`);
+	else
+		res.send(`/users/${user.hash}/${user.photos[0]}`);
 };

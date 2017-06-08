@@ -26,3 +26,8 @@ a.nav-item.is-tab.is-active {
 .control {
 	margin-bottom: 1rem;
 }
+
+#prev:hover, #next:hover {
+	cursor: pointer;
+	background-color: whitesmoke;
+}
