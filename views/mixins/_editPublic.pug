@@ -36,11 +36,11 @@ mixin editPublic(userdata = {})
 				input.input.is-info#addr(type="text", name="location[address]"
 				value=(userdata.location && userdata.location.address))
 				input#lng(type="text", name="location[coordinates][0]"
-				value=(userdata.location && userdata.location.coordinates[0]))
+				value=(userdata.location && userdata.location.coordinates[0]) hidden)
 				input#lat(type="text", name="location[coordinates][1]"
-				value=(userdata.location && userdata.location.coordinates[1]))
+				value=(userdata.location && userdata.location.coordinates[1]) hidden)
 				input#loc(type="text", name="location[loc]"
-				value=(userdata.location && userdata.location.loc))
+				value=(userdata.location && userdata.location.loc) hidden)
 			label.label Bio
 			p.control
 				textarea.textarea.is-info(name="bio" placeholder="Who are you?")= userdata.bio

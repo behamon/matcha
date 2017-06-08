@@ -16,13 +16,12 @@ function autocomplete(input, lngInput, latInput, locInput) {
 }
 
 function findCity(location) {
-	location.forEach((obj) => {
-		if (obj.types[0].length && obj.types[0] == "locality") {
-			var loca = obj.short_name;
+	for (var obj in location) {
+		if (location[obj].types[0].length && location[obj].types[0] == "locality") {
+			return location[obj].short_name;
 		}
-		console.log(obj);
-	});
-	return loca;
+	}
+	return false;
 }
 
 function navError(err) {
