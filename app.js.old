@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -8,9 +7,9 @@ const bodyParser = require('body-parser');
 const promisify = require('es6-promisify');
 const flash = require('connect-flash');
 const routes = require('./routes/index');
-const helpers = require('./handlers/helpers'); // investigate
-const errorHandlers = require('./handlers/errorHandlers'); //investigate
-// require('./handlers/passport');
+const helpers = require('./handlers/helpers');
+const errorHandlers = require('./handlers/errorHandlers');
+const db = require('database');
 
 const app = express();
 
@@ -29,7 +28,7 @@ app.use(session({
   key: process.env.KEY,
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection })
+  store: new MongoStore({ db: database })
 }));
 
 // Flash middleware to use req.flash()

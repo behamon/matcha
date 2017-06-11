@@ -1,10 +1,8 @@
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
 const promisify = require('es6-promisify');
 const mhash = require('mhash');
 const crypto = require('crypto');
 const mail = require('../handlers/mail');
-
+const db = require('../database');
 
 exports.isLoggedIn = (req, res, next) => {
 	if (req.session.user.length) {
@@ -26,20 +24,33 @@ exports.isLoggedOut = (req, res, next) => {
 	}
 };
 
-exports.login = async (req, res) => {
+exports.login = (req, res) => {
 	const phash = mhash("whirlpool", req.body.password);
-	const user = await User.findOne({ $and: [{email: req.body.email}, {password: phash}] });
-	if (user) {
-		req.session.email = user.email;
-		req.session.user = user.hash;
+	db.get('users', (me) => {
+		if (me.length) {
+			req.session.email = me[0].email;
+			req.session.user = me[0].hash;
 
-		req.flash("is-success", "Successfully logged in !");
-		res.redirect('/');
-	}
-	else {
-		req.flash("is-danger", "Invalid email/password. Please try again.");
-		res.redirect('/login');
-	}
+			req.flash("is-success", "Successfully logged in !");
+			res.redirect('/');
+		}
+		else {
+			req.flash("is-danger", "Invalid email/password. Please try again.");
+			res.redirect('/login');
+		}
+	}, { $and: [{email: req.body.email}, {password: phash}] });
+	// const user = await User.findOne({ $and: [{email: req.body.email}, {password: phash}] });
+	// if (user) {
+	// 	req.session.email = user.email;
+	// 	req.session.user = user.hash;
+	//
+	// 	req.flash("is-success", "Successfully logged in !");
+	// 	res.redirect('/');
+	// }
+	// else {
+	// 	req.flash("is-danger", "Invalid email/password. Please try again.");
+	// 	res.redirect('/login');
+	// }
 };
 
 exports.logout = (req, res) => {
@@ -49,22 +60,30 @@ exports.logout = (req, res) => {
 	res.redirect('/');
 };
 
-exports.forgot = async (req, res) => {
-	const user = await User.findOne({ email: req.body.email });
-	if (!user) {
-		req.flash('is-warning', 'No account with that email exists.');
-		res.redirect('/login');
-	}
-	user.resetPasswordToken = crypto.randomBytes(20).toString('hex');
-	user.resetPasswordExpires = Date.now() + 3600000;
-	await user.save();
+exports.forgot = (req, res) => {
+	const token = crypto.randomBytes(20).toString('hex');
+	const exp = Date.now() + 3600000;
 
-	const resetURL = `http://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
-	const content = `Please go to this url to reset your password: ${resetURL}`;
+	db.update('users', { email: req.body.email }, { prout: 'prout' }, (res) => {
+		console.log(res);
+	});
 
-	await mail.send({ user, content });
-	req.flash('is-success', `You have been emailed a password reset link.`);
-	res.redirect('/login');
+
+	// const user = await User.findOne({ email: req.body.email });
+	// if (!user) {
+	// 	req.flash('is-warning', 'No account with that email exists.');
+	// 	res.redirect('/login');
+	// }
+	// user.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+	// user.resetPasswordExpires = Date.now() + 3600000;
+	// await user.save();
+	//
+	// const resetURL = `http://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
+	// const content = `Please go to this url to reset your password: ${resetURL}`;
+	//
+	// await mail.send({ user, content });
+	// req.flash('is-success', `You have been emailed a password reset link.`);
+	// res.redirect('/login');
 };
 
 exports.reset = async (req, res) => {

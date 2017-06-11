@@ -15,9 +15,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', userController.loginForm);
-router.post('/login', authController.isLoggedOut, catchErrors(authController.login));
+router.post('/login', authController.isLoggedOut, authController.login);
 
-router.post('/account/forgot', catchErrors(authController.forgot));
+router.post('/account/forgot', authController.forgot);
 router.get('/account/reset/:token', catchErrors(authController.reset));
 router.post('/account/reset/:token',
 	authController.confirmedPasswords,
