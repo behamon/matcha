@@ -4,6 +4,7 @@ html
 		title= `${title} | ${h.siteName}`
 		link(rel='stylesheet', href='/bulma/css/bulma.css')
 		link(rel='stylesheet', href='/css/layout.css')
+		link(href="/nouislider/distribute/nouislider.min.css" rel="stylesheet")
 		link(rel="shortcut icon" type="image/png" href="/assets/heart.png")
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 		script(src="/javascript/jquery-3.2.1.js")
@@ -34,7 +35,7 @@ html
 					span
 
 				.nav-right.nav-menu#nav-menu.is-hidden-tablet
-					+navMenu()
+					+navMenu(user)
 					if user
 						a.nav-item(href="/logout") Log-Out
 					else

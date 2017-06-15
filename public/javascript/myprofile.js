@@ -70,7 +70,10 @@ $(document).ready(function(){
 	else {
 		$('#view').addClass('is-active');
 
-		const user = window.location.pathname.split('/')[3];
+		var user = window.location.pathname.split('/')[3];
+		if (!user)
+			var user = window.location.pathname.split('/')[2];
+		console.log(user);
 		$('#next').click(() => {
 			$.get(`/api/pics/${user}`, { act: $('#pp').attr('src'), which: 1 }, function(data) {
 					$('#pp').attr("src", data);

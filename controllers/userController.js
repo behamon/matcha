@@ -1,6 +1,8 @@
 const promisify = require('es6-promisify');
 const hash = require('mhash');
 const mail = require('../handlers/mail');
+const db = require('./dbController');
+
 
 exports.signupForm = (req, res) => {
 	res.render('signup', {title: "Sign-Up"});
@@ -30,6 +32,8 @@ exports.validateData = async (req, res, next) => {
 	const regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 	const errs = [];
 
+	if (!req.body.first_name.length || !req.body.last_name.length)
+		errs.push('Please fill all fields!');
 	if (!regex.test(req.body.email))
 		errs.push('Invalid Email !');
 	if (req.body.password.length < 8)
@@ -39,8 +43,8 @@ exports.validateData = async (req, res, next) => {
 	else
 		req.body.password = hash("whirlpool", req.body.password);
 
-	const exists = await User.find({ email: req.body.email });
-	if (exists.length)
+	const exists = await db.getUser({ email: req.body.email });
+	if (exists)
 		errs.push('A user with this email already exists');
 
 	if (errs.length) {
@@ -48,6 +52,9 @@ exports.validateData = async (req, res, next) => {
 		res.redirect('/signup');
 		return;
 	}
+	delete req.body.password_confirm;
+	delete req.body.signup;
+	req.body.hash = hash("md5", req.body.email);
 	for (var input in req.body) {
 		if (req.body.hasOwnProperty(input) && (input === "first_name" || input === "last_name")) {
 			req.body[input] = escapeHtml(req.body[input]);
@@ -57,13 +64,13 @@ exports.validateData = async (req, res, next) => {
 };
 
 exports.registerUser = async (req, res, next) => {
-	const user = await (new User(req.body)).save();
+	const user = await db.createUser(req.body);
 	if (!user) {
 		req.flash('is-warning', `Something went wrong. Please try again later.`);
 		res.redirect('/signup');
 		return;
 	}
-	await mail.send({ user, content: "Thanks for signing up on Matcha ! Enjoy !" });
+	await mail.send({ email: user.email, content: "Thanks for signing up on Matcha ! Enjoy !" });
 	req.flash('is-success', `Account successfully created. You can now login as <strong>${user.email}</strong>`);
 	res.redirect('/login');
 };
@@ -76,11 +83,13 @@ const confirmedPasswords = (pw, pwc) => {
 };
 
 exports.editAccount = async (req, res) => {
-	const user = await User.findOne({ hash: req.params.user });
 	if (req.body.passChange) {
 		if (confirmedPasswords(req.body.password, req.body.password_confirm)) {
-			user.password = hash('whirlpool', req.body.password);
-			await user.save();
+			const modif = { password: hash('whirlpool', req.body.password) };
+			await db.updateUser(
+				{ hash: req.params.user },
+				{ $set: modif }
+			);
 			req.flash('is-success', "Password changed successfully.");
 			res.redirect('back');
 		}
@@ -97,21 +106,20 @@ exports.editAccount = async (req, res) => {
 			res.redirect('back');
 			return;
 		}
-		const exists = await User.findOne({ email: req.body.email });
-		if (exists && exists.email !== user.email) {
+		const exists = await db.getUser({ email: req.body.email });
+		const actual = await db.getUser({ hash: req.params.user });
+		if (exists && exists.email !== actual.email) {
 			req.flash('is-danger', "A user with this email already exists");
-			res.redirect('back');
-			return;
+			return res.redirect('back');
 		}
+		delete req.body.edit;
 		for (var input in req.body) {
 			if (req.body.hasOwnProperty(input) && (input === "first_name" || input === "last_name")) {
 				req.body[input] = escapeHtml(req.body[input]);
 			}
 		}
-		user.first_name = req.body.first_name;
-		user.last_name = req.body.last_name;
-		user.email = req.body.email;
-		await user.save();
+		req.body.hash = hash('md5', req.body.email);
+		const user = await db.updateUser({ hash: req.params.user }, { $set: req.body });
 		req.session.user = user.hash;
 		req.session.email = user.email;
 		req.flash('is-success', 'Successfully updated your infos.');

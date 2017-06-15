@@ -28,9 +28,15 @@ mixin editPublic(userdata = {})
 						if userdata.orientation === "A Man"
 							option(selected="selected") A Man
 							option A Woman
-						else
+							option Both
+						else if userdata.orientation === "A Woman"
 							option(selected="selected") A Woman
 							option A Man
+							option Both
+						else
+							option(selected="selected") Both
+							option A Man
+							option A Woman
 			label.label Address
 			p.control
 				input.input.is-info#addr(type="text", name="location[address]"
@@ -57,10 +63,11 @@ mixin editPublic(userdata = {})
 					.box
 						label.label(for="photo") Picture #{i + 1}
 						input.input.is-info(type="file" name=`photo-${i + 1}` accept="image/*")
-						if userdata.photos[i]
-							.card-image(style="margin-top: 5px")
-								figure.image
-									img(src=`/users/${userdata.hash}/${userdata.photos[i]}`)
+						if userdata.photos
+							if userdata.photos[i]
+								.card-image(style="margin-top: 5px")
+									figure.image
+										img(src=`/users/${userdata.hash}/${userdata.photos[i]}`)
 
 			p.control(style="text-align: center")
 				input.button.is-info#submit(type="submit" name="edit" value="Save changes" style="margin-top: 1rem")

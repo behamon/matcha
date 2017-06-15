@@ -6,3 +6,29 @@ block messages
 			.container
 				h1.title Browse
 					h2.subtitle Look at all these beautiful people !
+
+block content
+	.content.column.is-10.is-offset-1.has-text-centered
+		Strong Age
+		.slider.age
+	each user in users
+		a.box.column.is-10.is-offset-1.user-box(href=`user/${user.hash}` id=user.hash disabled)
+			.article.media
+				.media-left
+					figure.image.is-128x128
+						img(src=`/users/${user.hash}/${user.photos[0]}`)
+				.media-content
+					.content
+						strong #{user.first_name} #{user.last_name}
+						span  | #{user.age}, Lives in #{user.location.loc}
+						br
+						each tag in user.tags
+							span.tag.is-warning(style="margin-right: 3px") #{tag}
+						br
+						br
+						strong About Me
+						p #{user.bio}
+
+block scripts
+	script(src="/javascript/filter.js")
+	script(src="/nouislider/distribute/nouislider.min.js")

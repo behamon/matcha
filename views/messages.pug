@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	.columns(style="height: 30rem")
+		.nav.panel.column.is-2(style="margin: 1rem")
+			p.panel-heading Conversations
+			a.panel-block Jean
+			a.panel-block Jacques
+			a.panel-block Juice
+		.box.column.is-8(style="position: relative")
+			.messages
+			form.form#msg-form(action="")
+				input.input.is-info#msg-input
+				button.button.is-info#msg-button Send
+
+block scripts
+	script(src="/socket.io/socket.io.js")
+	script(src="/javascript/tchat.js")

@@ -1,8 +1,6 @@
 const nodemailer = require('nodemailer');
-const pug = require('pug');
-const juice = require('juice');
-const htmlToText = require('html-to-text');
 const promisify = require('es6-promisify');
+require('dotenv').config({ path: 'variables.env' });
 
 const transport = nodemailer.createTransport({
 	host: process.env.MAIL_HOST,
@@ -16,8 +14,8 @@ const transport = nodemailer.createTransport({
 exports.send = async (options) => {
 
 	const mailOptions = {
-		from: `Ben H <noreply@matcha.com>`,
-		to: options.user.email,
+		from: `noreply@matcha.com`,
+		to: options.email,
 		subject: `Matcha | Account Creation`,
 		text: options.content
 	};

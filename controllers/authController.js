@@ -2,7 +2,7 @@ const promisify = require('es6-promisify');
 const mhash = require('mhash');
 const crypto = require('crypto');
 const mail = require('../handlers/mail');
-const db = require('../database');
+const db = require('./dbController');
 
 exports.isLoggedIn = (req, res, next) => {
 	if (req.session.user.length) {
@@ -24,33 +24,20 @@ exports.isLoggedOut = (req, res, next) => {
 	}
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
 	const phash = mhash("whirlpool", req.body.password);
-	db.get('users', (me) => {
-		if (me.length) {
-			req.session.email = me[0].email;
-			req.session.user = me[0].hash;
+	const user = await db.getUser({ $and: [{email: req.body.email}, {password: phash}] });
+	if (user) {
+		req.session.email = user.email;
+		req.session.user = user.hash;
 
-			req.flash("is-success", "Successfully logged in !");
-			res.redirect('/');
-		}
-		else {
-			req.flash("is-danger", "Invalid email/password. Please try again.");
-			res.redirect('/login');
-		}
-	}, { $and: [{email: req.body.email}, {password: phash}] });
-	// const user = await User.findOne({ $and: [{email: req.body.email}, {password: phash}] });
-	// if (user) {
-	// 	req.session.email = user.email;
-	// 	req.session.user = user.hash;
-	//
-	// 	req.flash("is-success", "Successfully logged in !");
-	// 	res.redirect('/');
-	// }
-	// else {
-	// 	req.flash("is-danger", "Invalid email/password. Please try again.");
-	// 	res.redirect('/login');
-	// }
+		req.flash("is-success", "Successfully logged in !");
+		res.redirect('/');
+	}
+	else {
+		req.flash("is-danger", "Invalid email/password. Please try again.");
+		res.redirect('/login');
+	}
 };
 
 exports.logout = (req, res) => {
@@ -60,36 +47,33 @@ exports.logout = (req, res) => {
 	res.redirect('/');
 };
 
-exports.forgot = (req, res) => {
-	const token = crypto.randomBytes(20).toString('hex');
-	const exp = Date.now() + 3600000;
-
-	db.update('users', { email: req.body.email }, { prout: 'prout' }, (res) => {
-		console.log(res);
-	});
-
-
-	// const user = await User.findOne({ email: req.body.email });
-	// if (!user) {
-	// 	req.flash('is-warning', 'No account with that email exists.');
-	// 	res.redirect('/login');
-	// }
-	// user.resetPasswordToken = crypto.randomBytes(20).toString('hex');
-	// user.resetPasswordExpires = Date.now() + 3600000;
-	// await user.save();
-	//
-	// const resetURL = `http://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
-	// const content = `Please go to this url to reset your password: ${resetURL}`;
-	//
-	// await mail.send({ user, content });
-	// req.flash('is-success', `You have been emailed a password reset link.`);
-	// res.redirect('/login');
+exports.forgot = async (req, res) => {
+	const token = {
+		resetToken: crypto.randomBytes(20).toString('hex'),
+		resetExpires: new Date(Date.now() + 3600000)
+	};
+	const user = await db.updateUser(
+		{ email: req.body.email },
+		{ $set: token }
+	);
+	if (!user) {
+		req.flash('is-warning', 'No account with this email exists.');
+		res.redirect('/login');
+		return;
+	}
+	const resetURL = `http://${req.headers.host}/account/reset/${user.resetToken}`;
+	const content = `Please go to this url to reset your password: ${resetURL}`;
+	await mail.send({ email: user.email, content });
+	req.flash('is-success', `You have been emailed a password reset link.`);
+	res.redirect('/login');
 };
 
 exports.reset = async (req, res) => {
-	const user = await User.findOne({
-		resetPasswordToken: req.params.token,
-		resetPasswordExpires: { $gt: Date.now() }
+	const user = await db.getUser({
+		$and: [
+			{ resetToken: req.params.token },
+			{ resetExpires: {$gt: new Date(Date.now())}}
+		]
 	});
 	if (!user) {
 		req.flash('is-warning', 'Password reset is invalid or has expired');
@@ -106,27 +90,43 @@ exports.confirmedPasswords = (req, res, next) => {
 };
 
 exports.update = async (req, res) => {
-	const user = await User.findOne({
-		resetPasswordToken: req.params.token,
-		resetPasswordExpires: { $gt: Date.now() }
+	const user = await db.getUser({
+		$and: [
+			{ resetToken: req.params.token },
+			{ resetExpires: {$gt: new Date(Date.now())}}
+		]
 	});
 	if (!user) {
-		req.flash('is-warning', 'Password reset is invalid or has expired!');
+		req.flash('is-warning', 'Password reset is invalid or has expired');
 		return res.redirect('/login');
 	}
-	user.password = mhash('whirlpool', req.body.password);
-	user.resetPasswordToken = undefined;
-	user.resetPasswordExpires = undefined;
-	await user.save();
+	const modifs = {
+		resetToken: undefined,
+		resetExpires: undefined,
+		password: mhash('whirlpool', req.body.password)
+	};
+	await db.updateUser(
+		{ resetToken: req.params.token },
+		{ $set: modifs }
+	);
 	req.flash('is-success', 'Password reset sucessful! You may now login');
 	res.redirect('/login');
 }
 
 exports.isCorrectUser = (req, res, next) => {
 	if (req.params.user !== req.session.user) {
-		req.flash('is-danger', 'You can only edit your profile !');
+		req.flash('is-danger', 'You cannot access this page !');
 		res.redirect('back');
 		return;
+	}
+	next();
+};
+
+exports.hasProfile = async (req, res, next) => {
+	const user = await db.getUser({ hash: req.session.user });
+	if (!user.sexe || !user.orientation || !user.age) {
+		req.flash('is-warning', 'Please fill your profile to browse the website');
+		return res.redirect(`/myprofile/public/${user.hash}`);
 	}
 	next();
 };

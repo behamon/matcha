@@ -31,3 +31,30 @@ a.nav-item.is-tab.is-active {
 	cursor: pointer;
 	background-color: whitesmoke;
 }
+
+#nb-notif {
+	margin-left: 3px;
+}
+
+#msg-input {
+	position: absolute;
+	bottom: 1rem;
+	width: 85%;
+}
+
+#msg-button {
+	position: absolute;
+	width: 15%;
+	bottom: 1rem;
+	right: 1rem;
+	border-radius: 0 3px 3px 0;
+}
+
+#profile-actions {
+	display: flex;
+	justify-content: space-around;
+}
+
+.noUi-connect {
+	background: #3273dc;
+}
