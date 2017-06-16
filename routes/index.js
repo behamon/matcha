@@ -58,6 +58,7 @@ router.get('/:user/messages',
 // API ?
 
 router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
+router.get('/api/search', catchErrors(browseController.getHashList));
 
 // Export
 module.exports = router;

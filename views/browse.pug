@@ -11,12 +11,23 @@ block content
 	.content.column.is-10.is-offset-1.has-text-centered
 		Strong Age
 		.slider.age
+		.content
+			label.label(style="margin-top: 2rem") Sort by:
+			span.select.is-info
+				select.is-info#sort(name="sort")
+					option Age
+					option Tags
+		button.button.is-primary#apply(style="margin-top: 2rem") Apply
+
 	each user in users
 		a.box.column.is-10.is-offset-1.user-box(href=`user/${user.hash}` id=user.hash disabled)
 			.article.media
 				.media-left
 					figure.image.is-128x128
-						img(src=`/users/${user.hash}/${user.photos[0]}`)
+						if (user.photos && user.photos[0])
+							img(src=`/users/${user.hash}/${user.photos[0]}`)
+						else
+							img(src=`/assets/ph.jpg`)
 				.media-content
 					.content
 						strong #{user.first_name} #{user.last_name}

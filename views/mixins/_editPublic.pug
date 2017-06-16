@@ -51,7 +51,7 @@ mixin editPublic(userdata = {})
 			p.control
 				textarea.textarea.is-info(name="bio" placeholder="Who are you?")= userdata.bio
 
-			- const choices = ["#bio", "#geek", "#electro", "#fancy", "#meat"]
+			- const choices = ["#bio", "#geek", "#electro", "#fancy", "#meat", "#burger", "#books", "#science", "#art", "#fart"]
 			- const tags = userdata.tags || []
 			p.control
 				label.label Tags

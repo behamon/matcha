@@ -57,18 +57,19 @@ exports.createUser = async (user) => {
 exports.getGoodProfiles = async (user) => {
 	const db = await connection();
 	const col = await db.collection('users');
-	const res = await col.find(user).toArray();
-	if (res[0].orientation === "Both")
-		var matches = await col.find().toArray();
+	const userd = (await col.find(user).toArray())[0];
+	if (userd.orientation === "Both")
+		var opp_sexe = { $or: [{ sexe: "A Man" }, { sexe: "A Woman" }]};
 	else
-		var matches = await col.find({ sexe: res[0].orientation }).toArray();
-	for (var i = 0; i < matches.length; i++) {
-		if ((matches[i].orientation !== "Both" && matches[i].orientation !== res[0].sexe)
-			|| matches[i].hash == res[0].hash) {
-			matches.splice(i, 1);
-			i = -1;
-		}
-	}
+		var opp_sexe = { sexe: userd.orientation };
+
+	const matches = col.find({ $and: [
+		opp_sexe,
+		{ $or: [
+			{ orientation: "Both" },
+			{ orientation: userd.sexe }
+		]}
+	]}).toArray();
 	return matches;
 };
 
@@ -93,4 +94,22 @@ exports.addMessage = async (msg, conv, author) => {
 		msg: msg,
 		date: new Date(Date.now())
 	});
+};
+
+exports.getUsersWithQuery = async (user, query) => {
+	const db = await connection();
+	const col = await db.collection('users');
+	const userd = (await col.find({ hash: user }).toArray())[0];
+	if (userd.orientation === "Both")
+		var opp_sexe = { $or: [{ sexe: "A Man" }, { sexe: "A Woman" }]};
+	else
+		var opp_sexe = { sexe: userd.orientation };
+	var sort = {}; sort[query.sort] = 1;
+	const matches = await col.aggregate([
+			{ $match: { $and: [ opp_sexe, { hash: { $ne: userd.hash } }, { $or: [{ orientation: "Both" }, { orientation: userd.sexe }] }]}},
+			{ $match: {age: { $gt: query.minage, $lt: query.maxage }}},
+			{ $sort: sort },
+			{ $project: { hash: 1, tags: true, _id: 0 }}
+	]).toArray();
+	return matches;
 };
