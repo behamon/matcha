@@ -124,9 +124,9 @@ exports.isCorrectUser = (req, res, next) => {
 
 exports.hasProfile = async (req, res, next) => {
 	const user = await db.getUser({ hash: req.session.user });
-	if (!user.sexe || !user.orientation || !user.age) {
-		req.flash('is-warning', 'Please fill your profile to browse the website');
-		return res.redirect(`/myprofile/public/${user.hash}`);
+	if (!user || !user.sexe || !user.orientation || !user.age) {
+		req.flash('is-danger', 'You cannot acces this page');
+		return res.redirect(`/`);
 	}
 	next();
 };

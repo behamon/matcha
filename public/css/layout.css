@@ -58,3 +58,7 @@ a.nav-item.is-tab.is-active {
 .noUi-connect {
 	background: #3273dc;
 }
+
+.slider {
+	margin-bottom: 2rem;
+}

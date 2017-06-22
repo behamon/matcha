@@ -57,6 +57,7 @@ exports.resize = async (req, res, next) => {
 };
 
 exports.editProfile = async (req, res) => {
+	req.body.location.type = 'Point';
 	req.body.location.coordinates = req.body.location.coordinates.map(Number);
 	delete req.body.edit;
 	if (!Array.isArray(req.body.tags))
@@ -76,4 +77,19 @@ exports.getNextPic = async (req, res) => {
 		res.send(`/users/${user.hash}/${user.photos[n - 1]}`);
 	else
 		res.send(`/users/${user.hash}/${user.photos[0]}`);
+};
+
+exports.putLike = async (req, res) => {
+	const ret = await db.writeLike(req.session.user, req.body.user);
+	if (ret === false) {
+		res.send({
+			status: 'is-warning',
+			msg: 'You already liked this person!'
+		});
+	} else {
+		res.send({
+			status: 'is-success',
+			msg: 'Success'
+		});
+	}
 };

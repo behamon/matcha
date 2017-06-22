@@ -12,10 +12,14 @@ block messages
 
 block content
 	.column.is-half.is-offset-one-quarter#profile-actions
-		button.button.is-outlined.is-large.is-primary Like
-		button.button.is-outlined.is-large.is-danger Report
-		button.button.is-outlined.is-large.is-danger Block
+		button.button.is-medium.is-primary#like Like
+		button.button.is-medium.is-danger#report Report
+		button.button.is-medium.is-danger#block Block
+	.column.is-half.is-offset-one-quarter#profile-actions
+		.notification(hidden)#message
+			button.delete#hide-message
 	+fullProfile(userdata)
 
 block scripts
-	script(src="/javascript/myprofile.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="/javascript/otherProfile.js")

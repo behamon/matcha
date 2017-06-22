@@ -33,6 +33,12 @@ router.post('/signup',
 	catchErrors(userController.registerUser)
 );
 
+// router.get('/suggestions',
+// 	authController.isLoggedIn,
+// 	catchErrors(authController.hasProfile),
+// 	catchErrors(browseController.showProfileSuggestions)
+// );
+
 router.get('/browse',
 	authController.isLoggedIn,
 	catchErrors(authController.hasProfile),
@@ -50,7 +56,7 @@ router.post('/myprofile/public/:user',
  	catchErrors(profileController.editProfile)
 );
 
-router.get('/:user/messages',
+router.get('/messages/:user',
 	catchErrors(authController.hasProfile),
 	catchErrors(msgController.messages)
 );
@@ -59,6 +65,7 @@ router.get('/:user/messages',
 
 router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
 router.get('/api/search', catchErrors(browseController.getHashList));
+router.post('/api/like', catchErrors(profileController.putLike));
 
 // Export
 module.exports = router;

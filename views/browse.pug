@@ -11,12 +11,15 @@ block content
 	.content.column.is-10.is-offset-1.has-text-centered
 		Strong Age
 		.slider.age
+		Strong Geographical Range
+		.slider.loc
 		.content
 			label.label(style="margin-top: 2rem") Sort by:
 			span.select.is-info
 				select.is-info#sort(name="sort")
 					option Age
 					option Tags
+					option Near Me
 		button.button.is-primary#apply(style="margin-top: 2rem") Apply
 
 	each user in users
@@ -42,4 +45,5 @@ block content
 
 block scripts
 	script(src="/javascript/filter.js")
+	script(src="/javascript/wNumb.js")
 	script(src="/nouislider/distribute/nouislider.min.js")

@@ -2,7 +2,14 @@ const db = require('./dbController');
 
 
 exports.showProfiles = async (req, res) => {
-	const users = await db.getGoodProfiles({ hash: req.session.user });
+	const user = await db.getUser({ hash: req.session.user });
+	const users = await db.getGoodProfiles(user);
+	res.render('browse', { title: "Browse Profiles", users });
+};
+
+exports.showProfileSuggestions = async (req, res) => {
+	const user = await db.getUser({ hash: req.session.user });
+	const users = await db.getGoodProfiles(user);
 	res.render('browse', { title: "Browse Profiles", users });
 };
 
@@ -22,13 +29,16 @@ const countMatchingTags = (user, match) => {
 
 exports.getHashList = async (req, res) => {
 	const user = await db.getUser({ hash: req.session.user });
-	var users = await db.getUsersWithQuery(req.session.user, req.query);
 	if (req.query.sort === 'tags') {
+		var users = await db.getUsersWithQuery(user, req.query);
 		for (var i in users)
 			users[i].nbTags = countMatchingTags(user.tags, users[i].tags);
+		users.sort((a, b) => { return b.nbTags - a.nbTags; })
 	}
-	users.sort((a, b) => {
-		return b.nbTags - a.nbTags;
-	})
+	else if (req.query.sort === 'near me') {
+		var users = await db.getUsersByLocation(user, req.query);
+	}
+	else
+		var users = await db.getUsersWithQuery(user, req.query);
 	res.json(users);
 };

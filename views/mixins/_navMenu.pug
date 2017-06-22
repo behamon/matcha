@@ -1,8 +1,9 @@
 mixin navMenu(user = {})
-	a.nav-item.is-hidden-mobile(href="/") Home
-	a.nav-item.is-hidden-mobile(href="/browse") Browse
-	a.nav-item.is-hidden-mobile(href="/notifications") Notifications
-	a.nav-item.is-hidden-mobile(href="/messages") Messages
+	a.nav-item(href="/") Home
+	a.nav-item(href="/suggestions") Suggestions
+	a.nav-item(href="/browse") Browse
+	a.nav-item(href="/notifications") Notifications
+	a.nav-item(href=`/messages/${user}`) Messages
 		span.tag.is-danger#nb-notif 1
 	//- form.field.has-addons#m--search(method="POST" action="#")
 	//- 	p.control
