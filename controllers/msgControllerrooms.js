@@ -1,6 +1,15 @@
 const socketio = require('socket.io');
 const db = require('./dbController');
 
+var userdata;
+var userConvs;
+
+exports.messages1 = async (req, res, next) => {
+	userdata = await db.getUser({ hash: req.params.user });
+	userConvs = await db.getConvs(userdata);
+	next();
+};
+
 // db.createConversation(
 // 	{ email: "will@smith.com" },
 // 	{ email: "angelina@jolie.com" }
@@ -10,6 +19,9 @@ exports.listen = (app) => {
 	io = socketio.listen(app)
 
 	io.on('connection', (socket) => {
+		userConvs.forEach((conv) => {
+			socket.join(conv._id);
+		});
 
 		socket.on('message', async (data) => {
 			if (!data.to) {
@@ -21,7 +33,7 @@ exports.listen = (app) => {
 			else {
 				const conv = await db.getConv(data.from, data.to);
 				await db.addMessage(data.msg, conv._id, data.from);
-				socket.emit('message', { sender: "You", msg: data.msg });
+				socket.to(conv._id).emit('message', { sender: "You", msg: data.msg });
 			}
 		})
 	});
@@ -31,8 +43,6 @@ exports.listen = (app) => {
 // Messages controller
 
 exports.messages = async (req, res) => {
-	const userdata = await db.getUser({ hash: req.params.user });
-	const userConvs = await db.getConvs(userdata);
 	var toWho = [];
 	if (!userConvs) {
 		req.flash('is-info', 'Like users and wait for them to like back so you can talk to them !');
@@ -48,7 +58,8 @@ exports.messages = async (req, res) => {
 };
 
 exports.getConv = async (req, res) => {
-	console.log(req.query);
 	const messages = await db.getMessages(req.session.user, req.query.to);
+
 	res.json(messages);
+	// const conv = await db.getMessages()
 };

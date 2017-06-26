@@ -5,13 +5,25 @@ block content
 		.nav.panel.column.is-2(style="margin: 1rem")
 			p.panel-heading Conversations
 			each conv in convs
-				a.panel-block(href=`/messages/${userdata.hash}?to=${conv.hash}`) #{conv.name}
+				a.panel-block(href=`/messages/${hash}?to=${conv.hash}`) #{conv.name}
 		.box.column.is-8(style="position: relative")
-			.messages
+			.messages(style="overflow: auto; height: 90%")
+				table.table
+					thead
+						tr
+							th Sender
+							th Message
+					tbody#table
+						tr
+
+							
+						
 			form.form#msg-form(action="")
 				input.input.is-info#msg-input
 				button.button.is-info#msg-button Send
 
 block scripts
 	script(src="/socket.io/socket.io.js")
+	script.
+		var hash = "#{hash}";
 	script(src="/javascript/tchat.js")

@@ -57,6 +57,7 @@ router.post('/myprofile/public/:user',
 );
 
 router.get('/messages/:user',
+	// catchErrors(msgController.messages1),
 	catchErrors(authController.hasProfile),
 	catchErrors(msgController.messages)
 );
@@ -66,6 +67,7 @@ router.get('/messages/:user',
 router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
 router.get('/api/search', catchErrors(browseController.getHashList));
 router.post('/api/like', catchErrors(profileController.putLike));
+router.get('/api/conv/:user', authController.isCorrectUser, catchErrors(msgController.getConv));
 
 // Export
 module.exports = router;

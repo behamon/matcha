@@ -84,15 +84,47 @@ exports.getConvs = async (user) => {
 	return res;
 };
 
+
+const getConv = async (from, to) => {
+	const db = await connection();
+	const conversations = await db.collection('conversations');
+	const res = await conversations.findOne({ $or: [
+			{ $and: [
+				{ 'user0.hash': from },
+				{ 'user1.hash': to }
+			] },
+			{ $and: [
+				{ 'user0.hash': to },
+				{ 'user1.hash': from }
+			] }
+		]
+	});
+	return res;
+};
+exports.getConv = getConv;
+
 exports.addMessage = async (msg, conv, author) => {
 	const db = await connection();
 	const messages = await db.collection('messages');
 	await messages.insertOne({
+		msg: msg,
 		conv: conv,
 		author: author,
-		msg: msg,
 		date: new Date(Date.now())
 	});
+};
+
+exports.getMessages = async (from, to) => {
+	const db = await connection();
+	const messages = await db.collection('messages');
+	const conv = await getConv(from, to);
+	console.log(conv);
+	const msgs = await messages
+		.find({ conv: conv._id })
+		.sort({ date: 1 })
+		.toArray();
+	msgs.unshift(conv);
+	return msgs;
 };
 
 exports.getGoodProfiles = async (user) => {
