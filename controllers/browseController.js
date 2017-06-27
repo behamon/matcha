@@ -1,6 +1,5 @@
 const db = require('./dbController');
 
-
 exports.showProfiles = async (req, res) => {
 	const user = await db.getUser({ hash: req.session.user });
 	const users = await db.getGoodProfiles(user);
@@ -15,7 +14,9 @@ exports.showProfileSuggestions = async (req, res) => {
 
 exports.showUser = async (req, res) => {
 	const userdata = await db.getUser({ hash: req.params.user });
-	res.render('userProfile', { title: userdata.first_name, userdata });
+	const likedUser = await db.likedUser(req.params.user, req.session.user);
+	console.log(likedUser);
+	res.render('userProfile', { title: userdata.first_name, userdata, like: likedUser });
 };
 
 const countMatchingTags = (user, match) => {

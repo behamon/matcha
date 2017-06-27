@@ -118,7 +118,6 @@ exports.getMessages = async (from, to) => {
 	const db = await connection();
 	const messages = await db.collection('messages');
 	const conv = await getConv(from, to);
-	console.log(conv);
 	const msgs = await messages
 		.find({ conv: conv._id })
 		.sort({ date: 1 })
@@ -157,7 +156,6 @@ exports.getUsersWithQuery = async (user, query) => {
 		var opp_sexe = { sexe: user.orientation };
 
 	var sort = {}; sort[query.sort] = 1;
-	console.log(query);
 	const matches = await col.aggregate([
 		{ $geoNear: {
 			near: { type: 'Point', coordinates: user.location.coordinates },
@@ -207,4 +205,14 @@ exports.writeLike = async (from, to) => {
 		return false;
 	else
 		return true;
+};
+
+exports.likedUser = async (viewing, actual) => {
+	const db = await connection();
+	const col = await db.collection('users');
+	const view = await col.findOne({ hash: viewing });
+	if (view.likes && view.likes.indexOf(actual) != -1)
+		return true;
+	else
+		return false;
 };

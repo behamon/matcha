@@ -28,7 +28,6 @@ require('dotenv').config({ path: 'variables.env' });
 
 const db = require('./controllers/dbController');
 
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -82,8 +81,11 @@ if (app.get('env') === 'development') {
 }
 
 app.set('port', process.env.PORT || 7777);
-const server = module.exports = app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(`Express running → PORT ${server.address().port}`);
 });
 
-const io = require('./controllers/msgController').listen(server);
+const sharedsession = require('express-socket.io-session');
+const io = require('socket.io')(server);
+// io.use(sharedsession(session, { autoSave: true }));
+const socketHandler = require('./handlers/sockets')(io);

@@ -11,6 +11,11 @@ block messages
 
 
 block content
+	.column.is-half.is-offset-one-quarter
+		if like == true
+			span.tag.is-medium.is-success This user likes you. Like back to engage conversation !
+		else
+			span.tag.is-medium.is-light This user did not like your profile (yet). Like to grab attention !
 	.column.is-half.is-offset-one-quarter#profile-actions
 		button.button.is-medium.is-primary#like Like
 		button.button.is-medium.is-danger#report Report

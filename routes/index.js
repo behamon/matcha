@@ -62,7 +62,7 @@ router.get('/messages/:user',
 	catchErrors(msgController.messages)
 );
 
-// API ?
+// API
 
 router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
 router.get('/api/search', catchErrors(browseController.getHashList));

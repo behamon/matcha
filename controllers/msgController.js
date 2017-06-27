@@ -1,32 +1,9 @@
-const socketio = require('socket.io');
 const db = require('./dbController');
 
 // db.createConversation(
 // 	{ email: "will@smith.com" },
 // 	{ email: "angelina@jolie.com" }
 // );
-
-exports.listen = (app) => {
-	io = socketio.listen(app)
-
-	io.on('connection', (socket) => {
-
-		socket.on('message', async (data) => {
-			if (!data.to) {
-				socket.emit('message', {
-					sender: "Admin",
-					msg: "Select a conversation on left panel."
-				});
-			}
-			else {
-				const conv = await db.getConv(data.from, data.to);
-				await db.addMessage(data.msg, conv._id, data.from);
-				socket.emit('message', { sender: "You", msg: data.msg });
-			}
-		})
-	});
-
-};
 
 // Messages controller
 
@@ -48,7 +25,6 @@ exports.messages = async (req, res) => {
 };
 
 exports.getConv = async (req, res) => {
-	console.log(req.query);
 	const messages = await db.getMessages(req.session.user, req.query.to);
 	res.json(messages);
 };

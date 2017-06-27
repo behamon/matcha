@@ -9,6 +9,7 @@ $(document).ready(function(){
 			$('#message').append(data.msg);
 			$('#message').removeAttr('hidden');
 			if (data.status === 'is-success') {
+				console.log("like success");
 				socket.emit('like', { hash: user });
 			}
 		});

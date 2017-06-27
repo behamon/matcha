@@ -5,7 +5,7 @@ const mail = require('../handlers/mail');
 const db = require('./dbController');
 
 exports.isLoggedIn = (req, res, next) => {
-	if (req.session.user.length) {
+	if (req.session.user && req.session.user.length) {
 		next();
 	}
 	else {
