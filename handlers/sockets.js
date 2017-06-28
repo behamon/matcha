@@ -1,10 +1,21 @@
 const db = require('../controllers/dbController');
 
-
 exports = module.exports = function(io) {
+
+	var users = {};
+
 	io.on('connection', (socket) => {
-		console.log('New Connection');
-		socket.id =
+		// console.log(`Session.user= ${socket.handshake.session.user}`);
+
+		if (socket.handshake.session.user && socket.handshake.session.user.length > 0)
+			users[socket.id] = socket.handshake.session.user;
+
+		socket.on('disconnect', () => {
+			delete users[socket.id];
+			io.sockets.emit('users', users);
+		});
+		io.sockets.emit('users', users);
+
 		socket.on('message', async (data) => {
 			if (!data.to) {
 				socket.emit('message', {
@@ -19,4 +30,5 @@ exports = module.exports = function(io) {
 			}
 		})
 	});
+
 };

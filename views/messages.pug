@@ -5,7 +5,8 @@ block content
 		.nav.panel.column.is-2(style="margin: 1rem")
 			p.panel-heading Conversations
 			each conv in convs
-				a.panel-block(href=`/messages/${hash}?to=${conv.hash}` id=`${conv.hash}`)= `${conv.name}`
+				a.panel-block(href=`/messages/${hash}?to=${conv.hash}`)= `${conv.name}`
+					span.tag.is-light(id=`${conv.hash}`)
 		.box.column.is-8(style="position: relative")
 			.messages(style="overflow: auto; height: 92%")
 				table.table
@@ -21,7 +22,6 @@ block content
 				button.button.is-info#msg-button Send
 
 block scripts
-	script(src="/socket.io/socket.io.js")
 	script.
 		var hash = "#{hash}";
 	script(src="/javascript/tchat.js")

@@ -85,7 +85,14 @@ const server = app.listen(app.get('port'), () => {
   console.log(`Express running → PORT ${server.address().port}`);
 });
 
-const sharedsession = require('express-socket.io-session');
 const io = require('socket.io')(server);
-// io.use(sharedsession(session, { autoSave: true }));
+const sharedsession = require("express-socket.io-session");
+io.use(sharedsession(session({
+	secret: process.env.SECRET,
+	key: process.env.KEY,
+	resave: false,
+	saveUninitialized: false,
+	store: new MongoStore({ dbPromise: database })
+}), { autoSave: true }));
+
 const socketHandler = require('./handlers/sockets')(io);

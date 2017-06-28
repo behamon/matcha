@@ -8,7 +8,10 @@ html
 		link(rel="shortcut icon" type="image/png" href="/assets/heart.png")
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 		script(src="/javascript/jquery-3.2.1.js")
+		script(src="/socket.io/socket.io.js")
 		script(src="/javascript/site.js")
+		script.
+			var socket = io();
 	body
 
 		include mixins/_navMenu
@@ -27,7 +30,7 @@ html
 					else
 						a.nav-item.is-hidden-mobile(href=`/myprofile/view/${user}`)
 							button.button.is-medium.is-danger My Profile
-						a.nav-item(href="/logout") Log-Out
+						a.nav-item.logout(href="/logout") Log-Out
 
 				span.nav-toggle#nav-toggle
 					span
@@ -37,7 +40,7 @@ html
 				.nav-right.nav-menu#nav-menu.is-hidden-tablet
 					+navMenu(user)
 					if user
-						a.nav-item(href="/logout") Log-Out
+						a.nav-item.logout(href="/logout") Log-Out
 					else
 						a.nav-item(href="/signup") Sign-Up
 						a.nav-item(href="/login") Login

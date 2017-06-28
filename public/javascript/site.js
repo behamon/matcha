@@ -2,31 +2,12 @@ $(document).ready(function(){
 
 	$('#nav-toggle').click(function() {
 		$('#nav-menu').toggleClass('is-active');
-	})
-	let vars = getUrlVars();
-	if (vars.to) {
-		update(hash, vars.to);
-		window.setInterval(function() { update(hash, vars.to) }, 4000);
-	}
-
-	var socket = io();
-
-	$('#msg-button').click((e) => {
-		var vars = getUrlVars();
-		e.preventDefault();
-		socket.emit('message', {
-			from: window.location.pathname.split('/')[2],
-			to: vars.to,
-			msg: $('#msg-input').val()
-		});
-		$('#msg-input').val('');
 	});
 
-	socket.on('message', (data) => {
-		data.msg = escapeHtml(data.msg);
-		$('.table')
-			.append($(`<tr><th>${data.sender}</th><td>${data.msg}</td></tr>`));
-			$('.messages')[0].scrollTop = $('.messages')[0].scrollHeight;
+	$('.logout').click(() => {
+		console.log('hello');
+		console.log($('.logout').attr('id'));
+		socket.emit('userLogout', $('.logout').attr('id'))
 	});
 
 });
