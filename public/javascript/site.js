@@ -4,10 +4,16 @@ $(document).ready(function(){
 		$('#nav-menu').toggleClass('is-active');
 	});
 
-	$('.logout').click(() => {
-		console.log('hello');
-		console.log($('.logout').attr('id'));
-		socket.emit('userLogout', $('.logout').attr('id'))
+	socket.on('message', (data) => {
+		$('#nb-notif').text((i, old) => {
+			return (parseInt(old) + 1);
+		});
+	});
+
+	socket.on('notif', () => {
+		$('#nb-notif').text((i, old) => {
+			return (parseInt(old) + 1);
+		});
 	});
 
 });

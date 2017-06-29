@@ -17,12 +17,14 @@ block content
 		else
 			span.tag.is-medium.is-light This user did not like your profile (yet). Like to grab attention !
 	.column.is-half.is-offset-one-quarter#profile-actions
-		button.button.is-medium.is-primary#like Like
+		if like == true
+			button.button.is-medium.is-primary#unlike Unlike
+		else
+			button.button.is-medium.is-primary#like Like
 		button.button.is-medium.is-danger#report Report
 		button.button.is-medium.is-danger#block Block
 	.column.is-half.is-offset-one-quarter#profile-actions
 		.notification(hidden)#message
-			button.delete#hide-message
 	+fullProfile(userdata)
 
 block scripts

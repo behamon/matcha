@@ -81,15 +81,22 @@ exports.getNextPic = async (req, res) => {
 
 exports.putLike = async (req, res) => {
 	const ret = await db.writeLike(req.session.user, req.body.user);
+	const browser = await db.getUser({ hash: req.session.user });
 	if (ret === false) {
-		res.send({
-			status: 'is-warning',
-			msg: 'You already liked this person!'
-		});
+		res.send({ status: 'is-warning', msg: 'You already liked this person!' });
 	} else {
-		res.send({
-			status: 'is-success',
-			msg: 'Success'
+		await db.newNotif({
+			viewed: false,
+			hash: req.body.user,
+			user: `${browser.first_name} ${browser.last_name}`,
+			what: "liked you !",
+			date: new Date(Date.now())
 		});
+		res.send({ status: 'is-success', msg: 'Success' });
 	}
+};
+
+exports.notifs = async (req, res) => {
+	const notifs = await db.getUserNotifs(req.session.user);
+	res.render('notifications', { title: "Notifications", notifs });
 };

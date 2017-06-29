@@ -14,8 +14,15 @@ exports.showProfileSuggestions = async (req, res) => {
 
 exports.showUser = async (req, res) => {
 	const userdata = await db.getUser({ hash: req.params.user });
+	const browser = await db.getUser({ hash: req.session.user });
 	const likedUser = await db.likedUser(req.params.user, req.session.user);
-	console.log(likedUser);
+	await db.newNotif({
+		viewed: false,
+		hash: userdata.hash,
+		user: `${browser.first_name} ${browser.last_name}`,
+		what: "visited your profile",
+		date: new Date(Date.now())
+	});
 	res.render('userProfile', { title: userdata.first_name, userdata, like: likedUser });
 };
 

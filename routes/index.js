@@ -33,12 +33,6 @@ router.post('/signup',
 	catchErrors(userController.registerUser)
 );
 
-// router.get('/suggestions',
-// 	authController.isLoggedIn,
-// 	catchErrors(authController.hasProfile),
-// 	catchErrors(browseController.showProfileSuggestions)
-// );
-
 router.get('/browse',
 	authController.isLoggedIn,
 	catchErrors(authController.hasProfile),
@@ -47,19 +41,20 @@ router.get('/browse',
 
 router.get('/user/:user', authController.isLoggedIn, catchErrors(browseController.showUser));
 
+router.get('/notifications', authController.isLoggedIn, catchErrors(profileController.notifs));
+
+router.get('/messages/:user',
+	catchErrors(authController.hasProfile),
+	catchErrors(msgController.messages)
+);
+
 router.get('/myprofile/:zone/:user', authController.isCorrectUser, catchErrors(profileController.editForm));
 router.post('/myprofile/private/:user', authController.isCorrectUser, catchErrors(userController.editAccount));
 router.post('/myprofile/public/:user',
-	authController.isCorrectUser,
-	profileController.upload,
-	profileController.resize,
- 	catchErrors(profileController.editProfile)
-);
-
-router.get('/messages/:user',
-	// catchErrors(msgController.messages1),
-	catchErrors(authController.hasProfile),
-	catchErrors(msgController.messages)
+authController.isCorrectUser,
+profileController.upload,
+profileController.resize,
+catchErrors(profileController.editProfile)
 );
 
 // API

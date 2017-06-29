@@ -1,0 +1,23 @@
+extends layout
+
+block content
+	.column.is-10.is-offset-1
+		table.table
+			thead
+				tr
+					th Notification
+					th Occured
+			tbody#table-notif
+				each notif in notifs
+					if notif.viewed == false
+						tr(style="background-color: lightgrey")
+							td #{notif.user} #{notif.what}
+							td.date #{notif.date}
+					else
+						tr
+							td #{notif.user} #{notif.what}
+							td.date #{notif.date}
+							
+block scripts
+	script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js")
+	script(src="javascript/notifs.js")

@@ -210,9 +210,27 @@ exports.writeLike = async (from, to) => {
 exports.likedUser = async (viewing, actual) => {
 	const db = await connection();
 	const col = await db.collection('users');
-	const view = await col.findOne({ hash: viewing });
-	if (view.likes && view.likes.indexOf(actual) != -1)
+	const view = await col.findOne({ hash: actual });
+	if (view.likes && view.likes.indexOf(viewing) != -1)
 		return true;
 	else
 		return false;
+};
+
+exports.newNotif = async (notif) => {
+	const db = await connection();
+	const col = await db.collection('notifs');
+	await col.insertOne(notif);
+};
+
+exports.getUserNotifs = async (user) => {
+	const db = await connection();
+	const col = await db.collection('notifs');
+	const notifs = await col.find({
+		hash: user
+	}).sort({ date: -1 }).limit(20).toArray();
+	await col.updateMany({ hash: user }, {
+		$set: { viewed: true }
+	});
+	return notifs;
 };

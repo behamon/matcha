@@ -1,19 +1,20 @@
 $(document).ready(() => {
 
-	let vars = getUrlVars();
+	var vars = getUrlVars();
 	if (vars.to) {
 		update(hash, vars.to);
-		window.setInterval(function() { update(hash, vars.to) }, 4000);
 	}
 
 	$('#msg-button').click((e) => {
-		var vars = getUrlVars();
 		e.preventDefault();
 		socket.emit('message', {
 			from: window.location.pathname.split('/')[2],
 			to: vars.to,
 			msg: $('#msg-input').val()
 		});
+		let msg = escapeHtml($('#msg-input').val());
+		$('.table').append($(`<tr><th>You</th><td>${msg}</td></tr>`));
+		$('.messages')[0].scrollTop = $('.messages')[0].scrollHeight;
 		$('#msg-input').val('');
 	});
 
@@ -31,10 +32,12 @@ $(document).ready(() => {
 	});
 
 	socket.on('message', (data) => {
-		data.msg = escapeHtml(data.msg);
-		$('.table')
-			.append($(`<tr><th>${data.sender}</th><td>${data.msg}</td></tr>`));
+		if (data.hash === vars.to) {
+			data.msg = escapeHtml(data.msg);
+			$('.table').append($(`<tr><th>${data.sender}</th><td>${data.msg}</td></tr>`));
 			$('.messages')[0].scrollTop = $('.messages')[0].scrollHeight;
+		}
+		// TODO else
 	});
 
 });
