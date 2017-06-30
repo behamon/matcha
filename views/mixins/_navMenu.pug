@@ -3,10 +3,6 @@ mixin navMenu(user = {})
 	a.nav-item(href="/suggestions") Suggestions
 	a.nav-item(href="/browse") Browse
 	a.nav-item(href="/notifications") Notifications
-		span.tag.is-danger#nb-notif 0
+		span.tag.is-danger#nb-notif
 	a.nav-item(href=`/messages/${user}`) Messages
-	//- form.field.has-addons#m--search(method="POST" action="#")
-	//- 	p.control
-	//- 		input.input(type="text" placeholder="Find user")
-	//- 	p.control
-	//- 		input.input(type="submit" name="search" value="Search")
+		span.tag.is-danger#nb-msg

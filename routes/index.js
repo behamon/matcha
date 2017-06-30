@@ -59,9 +59,10 @@ catchErrors(profileController.editProfile)
 
 // API
 
-router.get('/api/pics/:user', catchErrors(profileController.getNextPic));
-router.get('/api/search', catchErrors(browseController.getHashList));
-router.post('/api/like', catchErrors(profileController.putLike));
+router.get('/api/pics/:user', authController.isLoggedIn, catchErrors(profileController.getNextPic));
+router.get('/api/search', authController.isLoggedIn, catchErrors(browseController.getHashList));
+router.post('/api/like', authController.isLoggedIn, catchErrors(profileController.putLike));
+router.post('/api/unlike', authController.isLoggedIn, catchErrors(profileController.removeLike));
 router.get('/api/conv/:user', authController.isCorrectUser, catchErrors(msgController.getConv));
 
 // Export

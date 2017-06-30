@@ -1,5 +1,10 @@
 $(document).ready(() => {
 
+	var stock = localStorage;
+
+	stock.setItem('msg', 0);
+	$('#nb-msg').text(stock.getItem('msg'));
+
 	var vars = getUrlVars();
 	if (vars.to) {
 		update(hash, vars.to);
@@ -37,7 +42,6 @@ $(document).ready(() => {
 			$('.table').append($(`<tr><th>${data.sender}</th><td>${data.msg}</td></tr>`));
 			$('.messages')[0].scrollTop = $('.messages')[0].scrollHeight;
 		}
-		// TODO else
 	});
 
 });

@@ -7,9 +7,18 @@ $(document).ready(function(){
 			$('#message').addClass(data.status);
 			$('#message').text(data.msg);
 			$('#message').removeAttr('hidden');
-			if (data.status === 'is-success') {
+			if (data.status === 'is-success')
 				socket.emit('note', user);
-			}
+		});
+	});
+
+	$('#unlike').click(() => {
+		$.post(`/api/unlike`, { user: user }, (data) => {
+			$('#message').addClass(data.status);
+			$('#message').text(data.msg);
+			$('#message').removeAttr('hidden');
+			if (data.status === 'is-success')
+				socket.emit('note', user);
 		});
 	});
 

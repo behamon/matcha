@@ -1,19 +1,26 @@
 $(document).ready(function(){
 
+	var stock = localStorage;
+
+	$('#nb-notif').text(stock.getItem('notifs'));
+	$('#nb-msg').text(stock.getItem('msg'));
+
 	$('#nav-toggle').click(function() {
 		$('#nav-menu').toggleClass('is-active');
 	});
 
 	socket.on('message', (data) => {
-		$('#nb-notif').text((i, old) => {
+		$('#nb-msg').text((i, old) => {
 			return (parseInt(old) + 1);
 		});
+		addMsg(stock);
 	});
 
 	socket.on('notif', () => {
 		$('#nb-notif').text((i, old) => {
 			return (parseInt(old) + 1);
 		});
+		addNotif(stock);
 	});
 
 });
@@ -63,4 +70,24 @@ const escapeHtml = (string) => {
   return String(string).replace(/[&<>"'`=\/]/g, function (s) {
     return entityMap[s];
   });
+}
+
+const addNotif = (stock) => {
+	let currentNb = parseInt(stock.getItem('notifs'));
+	if (currentNb > 0) {
+		stock.setItem('notifs', currentNb + 1);
+	} else {
+		stock.setItem('notifs', 1);
+	}
+	$('#nb-notif').text(stock.getItem('notifs'));
+}
+
+const addMsg = (stock) => {
+	let currentNb = parseInt(stock.getItem('msg'));
+	if (currentNb > 0) {
+		stock.setItem('msg', currentNb + 1);
+	} else {
+		stock.setItem('msg', 1);
+	}
+	$('#nb-msg').text(stock.getItem('msg'));
 }

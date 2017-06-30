@@ -82,18 +82,50 @@ exports.getNextPic = async (req, res) => {
 exports.putLike = async (req, res) => {
 	const ret = await db.writeLike(req.session.user, req.body.user);
 	const browser = await db.getUser({ hash: req.session.user });
-	if (ret === false) {
-		res.send({ status: 'is-warning', msg: 'You already liked this person!' });
-	} else {
-		await db.newNotif({
+	if (ret === true) {
+		const target = await db.getUser({ hash: req.body.user });
+		db.createConversation(
+			{ hash: req.session.user },
+			{ hash: req.body.user }
+		);
+		db.newNotif({
 			viewed: false,
-			hash: req.body.user,
+			hash: target.hash,
 			user: `${browser.first_name} ${browser.last_name}`,
-			what: "liked you !",
-			date: new Date(Date.now())
+			what: "is now one of your matches! Engage conversation",
+			date: new Date(Date.now() + 1000)
 		});
-		res.send({ status: 'is-success', msg: 'Success' });
+		db.newNotif({
+			viewed: false,
+			hash: browser.hash,
+			user: `${target.first_name} ${target.last_name}`,
+			what: "is now one of your matches! Engage conversation",
+			date: new Date(Date.now() + 1000)
+		});
 	}
+	db.newNotif({
+		viewed: false,
+		hash: req.body.user,
+		user: `${browser.first_name} ${browser.last_name}`,
+		what: "liked you !",
+		date: new Date(Date.now())
+	});
+	res.send({ status: 'is-success', msg: 'Success' });
+};
+
+exports.removeLike = async (req, res) => {
+	const ret = await db.delLike(req.session.user, req.body.user);
+	const browser = await db.getUser({ hash: req.session.user });
+	const target = await db.getUser({ hash: req.body.user });
+	db.newNotif({
+		viewed: false,
+		hash: target.hash,
+		user: `${browser.first_name} ${browser.last_name}`,
+		what: "unliked you because you suck!",
+		date: new Date(Date.now())
+	});
+	db.deleteConversation(req.session.user, req.body.user);
+	res.send({ status: 'is-success', msg: 'Successfully unliked' });
 };
 
 exports.notifs = async (req, res) => {

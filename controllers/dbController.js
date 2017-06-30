@@ -73,6 +73,14 @@ exports.createConversation = async (user1, user2) => {
 	return ret;
 };
 
+exports.deleteConversation = async (user1, user2) => {
+	const db = await connection();
+	const users = await db.collection('users');
+	const conversations = await db.collection('conversations');
+	const conv = await getConv(user1, user2);
+	conversations.remove(conv);
+};
+
 exports.getConvs = async (user) => {
 	const db = await connection();
 	const conversations = await db.collection('conversations');
@@ -194,24 +202,42 @@ exports.getUsersByLocation = async (user, query) => {
 	return matches;
 };
 
-exports.writeLike = async (from, to) => {
+exports.writeLike = async (browser, target) => {
 	const db = await connection();
 	const col = await db.collection('users');
 	const res = await col.findOneAndUpdate(
-		{ hash: to },
-		{ $addToSet: { likes: from }}
+		{ hash: browser },
+		{ $addToSet: { likes: target }}
 	);
-	if (res.value.likes && res.value.likes.indexOf(from) != -1)
-		return false;
-	else
-		return true;
+	const liked = await likedByTarget(target, browser);
+	return liked;
 };
 
-exports.likedUser = async (viewing, actual) => {
+exports.delLike = async (browser, target) => {
 	const db = await connection();
 	const col = await db.collection('users');
-	const view = await col.findOne({ hash: actual });
-	if (view.likes && view.likes.indexOf(viewing) != -1)
+	const res = await col.findOneAndUpdate(
+		{ hash: browser },
+		{ $pull: { likes: target }}
+	);
+};
+
+const likedByTarget = async (target, browser) => {
+	const db = await connection();
+	const col = await db.collection('users');
+	const view = await col.findOne({ hash: target });
+	if (view.likes && view.likes.indexOf(browser) != -1)
+		return true;
+	else
+		return false;
+};
+exports.likedByTarget = likedByTarget;
+
+exports.likesTarget = async (target, browser) => {
+	const db = await connection();
+	const col = await db.collection('users');
+	const view = await col.findOne({ hash: browser });
+	if (view.likes && view.likes.indexOf(target) != -1)
 		return true;
 	else
 		return false;

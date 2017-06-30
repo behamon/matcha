@@ -22,8 +22,7 @@ exports = module.exports = function(io) {
 					sender: "Admin",
 					msg: "Select a conversation on left panel."
 				});
-			}
-			else {
+			} else {
 				let socketId = getUserSocket(users, data.to);
 				const conv = await db.getConv(data.from, data.to);
 				await db.addMessage(data.msg, conv._id, data.from);

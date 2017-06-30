@@ -12,12 +12,12 @@ block messages
 
 block content
 	.column.is-half.is-offset-one-quarter
-		if like == true
+		if likedByTarget == true
 			span.tag.is-medium.is-success This user likes you. Like back to engage conversation !
 		else
-			span.tag.is-medium.is-light This user did not like your profile (yet). Like to grab attention !
+			span.tag.is-medium.is-light This user did not like your profile (yet) :(
 	.column.is-half.is-offset-one-quarter#profile-actions
-		if like == true
+		if likesTarget == true
 			button.button.is-medium.is-primary#unlike Unlike
 		else
 			button.button.is-medium.is-primary#like Like

@@ -15,7 +15,8 @@ exports.showProfileSuggestions = async (req, res) => {
 exports.showUser = async (req, res) => {
 	const userdata = await db.getUser({ hash: req.params.user });
 	const browser = await db.getUser({ hash: req.session.user });
-	const likedUser = await db.likedUser(req.params.user, req.session.user);
+	const likedByTarget = await db.likedByTarget(req.params.user, req.session.user);
+	const likesTarget = await db.likesTarget(req.params.user, req.session.user);
 	await db.newNotif({
 		viewed: false,
 		hash: userdata.hash,
@@ -23,7 +24,7 @@ exports.showUser = async (req, res) => {
 		what: "visited your profile",
 		date: new Date(Date.now())
 	});
-	res.render('userProfile', { title: userdata.first_name, userdata, like: likedUser });
+	res.render('userProfile', { title: userdata.first_name, userdata, likedByTarget, likesTarget });
 };
 
 const countMatchingTags = (user, match) => {
