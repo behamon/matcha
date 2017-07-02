@@ -57,6 +57,15 @@ profileController.resize,
 catchErrors(profileController.editProfile)
 );
 
+
+// TODO DELETE Helper
+// const db = require('../controllers/dbController');
+// router.get('/popscores', async (req, res) => {
+// 	const scores = await db.popScore();
+// 	res.json(scores);
+// });
+
+
 // API
 
 router.get('/api/pics/:user', authController.isLoggedIn, catchErrors(profileController.getNextPic));

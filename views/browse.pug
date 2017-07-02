@@ -11,6 +11,8 @@ block content
 	.content.column.is-10.is-offset-1.has-text-centered
 		Strong Age
 		.slider.age
+		Strong Popularity
+		.slider.pop
 		Strong Geographical Range
 		.slider.loc
 		.content
@@ -19,6 +21,7 @@ block content
 				select.is-info#sort(name="sort")
 					option Age
 					option Tags
+					option Popularity
 					option Near Me
 		button.button.is-primary#apply(style="margin-top: 2rem") Apply
 
@@ -34,7 +37,8 @@ block content
 				.media-content
 					.content
 						strong #{user.first_name} #{user.last_name}
-						span  | #{user.age}, Lives in #{user.location.loc}
+						- if (isNaN(user.popularity)) { user.popularity = "0" }
+						span  | #{user.age}, Lives in #{user.location.loc} | #{user.popularity || "0"}★
 						br
 						each tag in user.tags
 							span.tag.is-warning(style="margin-right: 3px") #{tag}

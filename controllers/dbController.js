@@ -162,7 +162,6 @@ exports.getUsersWithQuery = async (user, query) => {
 		var opp_sexe = { $or: [{ sexe: "A Man" }, { sexe: "A Woman" }]};
 	else
 		var opp_sexe = { sexe: user.orientation };
-
 	var sort = {}; sort[query.sort] = 1;
 	const matches = await col.aggregate([
 		{ $geoNear: {
@@ -172,7 +171,8 @@ exports.getUsersWithQuery = async (user, query) => {
 			spherical: true
 		}},
 		{ $match: { $and: [ opp_sexe, { hash: { $ne: user.hash }}, { $or: [{ orientation: "Both" }, { orientation: user.sexe }] }]}},
-		{ $match: {age: { $gte: query.minage, $lte: query.maxage }}},
+		{ $match: { age: { $gte: query.minage, $lte: query.maxage }}},
+		{ $match: { popularity: { $gte: Number(query.minpop), $lte: Number(query.maxpop) }}},
 		{ $sort: sort },
 		{ $project: { hash: 1, tags: true, dist: 1, first_name: 1, _id: 0 }}
 	]).toArray();
@@ -197,6 +197,7 @@ exports.getUsersByLocation = async (user, query) => {
 		}},
 		{ $match: { $and: [ opp_sexe, { hash: { $ne: user.hash } }, { $or: [{ orientation: "Both" }, { orientation: user.sexe }] }]}},
 		{ $match: {age: { $gte: query.minage, $lte: query.maxage }}},
+		{ $match: { popularity: { $gte: Number(query.minpop), $lte: Number(query.maxpop) }}},
 		{ $project: { hash: 1, tags: true, _id: 0 }}
 	]).toArray();
 	return matches;
@@ -216,7 +217,7 @@ exports.writeLike = async (browser, target) => {
 exports.delLike = async (browser, target) => {
 	const db = await connection();
 	const col = await db.collection('users');
-	const res = await col.findOneAndUpdate(
+	col.findOneAndUpdate(
 		{ hash: browser },
 		{ $pull: { likes: target }}
 	);
@@ -246,7 +247,7 @@ exports.likesTarget = async (target, browser) => {
 exports.newNotif = async (notif) => {
 	const db = await connection();
 	const col = await db.collection('notifs');
-	await col.insertOne(notif);
+	col.insertOne(notif);
 };
 
 exports.getUserNotifs = async (user) => {
@@ -255,8 +256,35 @@ exports.getUserNotifs = async (user) => {
 	const notifs = await col.find({
 		hash: user
 	}).sort({ date: -1 }).limit(20).toArray();
-	await col.updateMany({ hash: user }, {
+	col.updateMany({ hash: user }, {
 		$set: { viewed: true }
 	});
 	return notifs;
 };
+
+exports.addVisit = async (user) => {
+	const db = await connection();
+	const col = await db.collection('users');
+	col.findOneAndUpdate(user, { $inc: { visits: 1 },  }, { returnOriginal: false });
+};
+
+const popScore = async () => {
+	const db = await connection();
+	const users = await db.collection('users');
+	const ret = await users.aggregate([{ $project: { hash: 1, first_name: 1, visits: 1, likes: 1}}]).toArray();
+	var max = 0;
+	for (var i = 0; i < ret.length; i++) {
+		let likes = await users.count({ likes: ret[i].hash });
+		let total = ret[i].visits + (2 * likes);
+		if (total > max) { max = total }
+	}
+	ret.forEach(async (user) => {
+		let likes = await users.count({ likes: user.hash });
+		let total = user.visits + (2 * likes);
+		let score = (total * 5) / max;
+		score = score.toString().substring(0, 3);
+		score = parseFloat(score);
+		users.update({ hash: user.hash }, { $set: { popularity: score } });
+	});
+};
+exports.popScore = popScore;

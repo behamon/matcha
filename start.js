@@ -18,7 +18,6 @@ const routes = require('./routes/index');
 const helpers = require('./handlers/helpers');
 const errorHandlers = require('./handlers/errorHandlers');
 const app = express();
-// const http = require('http').Server(app);
 
 // Load *variables.env* into proccess.env
 
@@ -27,6 +26,8 @@ require('dotenv').config({ path: 'variables.env' });
 // Start App if DB connection is done
 
 const db = require('./controllers/dbController');
+
+setInterval(() => { db.popScore() }, 10000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

@@ -16,7 +16,7 @@ exports.send = async (options) => {
 	const mailOptions = {
 		from: `noreply@matcha.com`,
 		to: options.email,
-		subject: `Matcha | Account Creation`,
+		subject: `Matcha | ${options.subject}`,
 		text: options.content
 	};
 

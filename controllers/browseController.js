@@ -17,7 +17,8 @@ exports.showUser = async (req, res) => {
 	const browser = await db.getUser({ hash: req.session.user });
 	const likedByTarget = await db.likedByTarget(req.params.user, req.session.user);
 	const likesTarget = await db.likesTarget(req.params.user, req.session.user);
-	await db.newNotif({
+	db.addVisit({ hash: req.params.user });
+	db.newNotif({
 		viewed: false,
 		hash: userdata.hash,
 		user: `${browser.first_name} ${browser.last_name}`,

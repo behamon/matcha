@@ -70,7 +70,7 @@ exports.registerUser = async (req, res, next) => {
 		res.redirect('/signup');
 		return;
 	}
-	await mail.send({ email: user.email, content: "Thanks for signing up on Matcha ! Enjoy !" });
+	await mail.send({ email: user.email, content: "Thanks for signing up on Matcha ! Enjoy !", subject: "Account Creation" });
 	req.flash('is-success', `Account successfully created. You can now login as <strong>${user.email}</strong>`);
 	res.redirect('/login');
 };
