@@ -23,12 +23,11 @@ html
 					a.nav-item(href="/")
 						img(src="/assets/matcha.png" style="max-height: 2.5rem" alt="home")
 				.nav-right.is-hidden-touch
-					+navMenuDesk(user)
-				.nav-right.is-hidden-touch
 					if !user
 						a.nav-item(href="/signup") Sign-Up
 						a.nav-item(href="/login") Login
 					else
+						+navMenuDesk(user)
 						a.nav-item(href=`/myprofile/view/${user}`)
 							button.button.is-medium.is-danger My Profile
 						a.nav-item.logout(href="/logout") Log-Out

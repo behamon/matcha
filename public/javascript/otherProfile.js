@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 	var user = window.location.pathname.split('/')[2];
-
+	
 	$('#like').click(() => {
 		$.post(`/api/like`, { user: user }, (data) => {
 			$('#message').addClass(data.status);

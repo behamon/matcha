@@ -51,26 +51,17 @@ router.get('/messages/:user',
 router.get('/myprofile/:zone/:user', authController.isCorrectUser, catchErrors(profileController.editForm));
 router.post('/myprofile/private/:user', authController.isCorrectUser, catchErrors(userController.editAccount));
 router.post('/myprofile/public/:user',
-authController.isCorrectUser,
-profileController.upload,
-profileController.resize,
-catchErrors(profileController.editProfile)
+	authController.isCorrectUser,
+	profileController.upload,
+	profileController.resize,
+	catchErrors(profileController.editProfile)
 );
-
-
-// TODO DELETE Helper
-// const db = require('../controllers/dbController');
-// router.get('/popscores', async (req, res) => {
-// 	const scores = await db.popScore();
-// 	res.json(scores);
-// });
-
 
 // API
 
 router.get('/api/pics/:user', authController.isLoggedIn, catchErrors(profileController.getNextPic));
 router.get('/api/search', authController.isLoggedIn, catchErrors(browseController.getHashList));
-router.post('/api/like', authController.isLoggedIn, catchErrors(profileController.putLike));
+router.post('/api/like', authController.isLoggedIn, catchErrors(authController.hasPics), catchErrors(profileController.putLike));
 router.post('/api/unlike', authController.isLoggedIn, catchErrors(profileController.removeLike));
 router.get('/api/conv/:user', authController.isCorrectUser, catchErrors(msgController.getConv));
 

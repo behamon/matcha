@@ -130,3 +130,12 @@ exports.hasProfile = async (req, res, next) => {
 	}
 	next();
 };
+
+exports.hasPics = async (req, res, next) => {
+	const user = await db.getUser({ hash: req.session.user });
+	if (!user || !user.photos) {
+		console.log('hey!');
+		return;
+	}
+	next();
+};
