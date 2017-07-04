@@ -19,12 +19,12 @@ block messages
 
 
 block nav
-	nav.nav.has-shadow
+	nav.nav.has-shadow(style="position: relative; z-index: 0")
 		.container
 			.nav-center
 				a.nav-item.is-tab#view(href=`/myprofile/view/${userdata.hash}`) Public Profile
 				a.nav-item.is-tab#public(href=`/myprofile/public/${userdata.hash}`) Edit My Profile
-				a.nav-item.is-tab#private(href=`/myprofile/private/${userdata.hash}`) Edit Account
+				a.nav-item.is-tab#private(href=`/myprofile/private/${userdata.hash}`) Account
 
 block content
 	if which === "private"

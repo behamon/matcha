@@ -1,14 +1,14 @@
 extends layout
 
 block content
-	.columns(style="height: 30rem")
+	.columns.is-flex(style="height: 30rem; flex-flow: wrap")
 		.nav.panel.column.is-2(style="margin: 1rem")
 			p.panel-heading Conversations
 			each conv in convs
 				a.panel-block(href=`/messages/${hash}?to=${conv.hash}`)= `${conv.name}`
 					span.tag.is-light(id=`${conv.hash}`)
 		.box.column.is-8(style="position: relative")
-			.messages(style="overflow: auto; height: 92%")
+			.messages(style="overflow: scroll; height: 90%; width: 100%;")
 				table.table
 					thead
 						tr

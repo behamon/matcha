@@ -1,0 +1,13 @@
+mixin navMenuTouch(user = {})
+	a.nav-item(href="/") Home
+	a.nav-item(href="/browse") Browse
+	a.nav-item(href="/notifications") Notifications
+		span.tag.is-danger#nb-notif
+	a.nav-item(href=`/messages/${user}`) Messages
+		span.tag.is-danger#nb-msg
+	if !user
+		a.nav-item(href="/signup") Sign-Up
+		a.nav-item(href="/login") Login
+	else
+		a.nav-item(href=`/myprofile/view/${user}`) My Profile
+		a.nav-item.logout(href="/logout") Log-Out

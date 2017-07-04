@@ -14,21 +14,22 @@ html
 			var socket = io();
 	body
 
-		include mixins/_navMenu
+		include mixins/_navMenuDesk
+		include mixins/_navMenuTouch
 
 		block header
 			nav.nav.has-shadow(style="height: 80px")
 				.nav-left(style="overflow: inherit")
 					a.nav-item(href="/")
 						img(src="/assets/matcha.png" style="max-height: 2.5rem" alt="home")
-					if user
-						+navMenu(user)
-				.nav-right.nav-menu
+				.nav-right.is-hidden-touch
+					+navMenuDesk(user)
+				.nav-right.is-hidden-touch
 					if !user
 						a.nav-item(href="/signup") Sign-Up
 						a.nav-item(href="/login") Login
 					else
-						a.nav-item.is-hidden-mobile(href=`/myprofile/view/${user}`)
+						a.nav-item(href=`/myprofile/view/${user}`)
 							button.button.is-medium.is-danger My Profile
 						a.nav-item.logout(href="/logout") Log-Out
 
@@ -37,13 +38,9 @@ html
 					span
 					span
 
-				.nav-right.nav-menu#nav-menu.is-hidden-tablet
-					+navMenu(user)
-					if user
-						a.nav-item.logout(href="/logout") Log-Out
-					else
-						a.nav-item(href="/signup") Sign-Up
-						a.nav-item(href="/login") Login
+				.nav-right.nav-menu.is-hidden-desktop(style="z-index: 100; position: absolute")#nav-menu
+					+navMenuTouch(user)
+
 
 		block messages
 			section.hero.is-info

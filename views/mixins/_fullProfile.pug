@@ -13,7 +13,7 @@ mixin fullProfile(userdata = {})
 					.card-footer
 						.card-footer-item#prev(style="color: #3273dc") Previous
 						.card-footer-item#next(style="color: #3273dc") Next
-			footer.column.is-one-third
+			.column.is-one-third
 					h2.title.is-3 #{userdata.first_name}, #{userdata.last_name}  |  #{userdata.popularity || "0"}★
 					if (userdata.age && userdata.location.loc && userdata.tags)
 						h2.subtitle #{userdata.age} Years Old, lives in #{userdata.location.loc}
