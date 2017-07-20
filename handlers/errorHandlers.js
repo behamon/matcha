@@ -38,3 +38,8 @@ exports.developmentErrors = (err, req, res, next) => {
     'application/json': () => res.json(errorDetails) // Ajax call, send JSON back
   });
 };
+
+exports.productionErrors = (err, req, res, next) => {
+  res.status(err.status || 500);
+	res.redirect('/');
+};

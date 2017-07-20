@@ -27,7 +27,7 @@ require('dotenv').config({ path: 'variables.env' });
 
 const db = require('./controllers/dbController');
 
-setInterval(() => { db.popScore() }, 10000);
+// setInterval(() => { db.popScore() }, 10000);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -80,6 +80,8 @@ if (app.get('env') === 'development') {
 	/* Development Error Handler - Prints stack trace */
 	app.use(errorHandlers.developmentErrors);
 }
+
+app.use(errorHandlers.productionErrors);
 
 app.set('port', process.env.PORT || 7777);
 const server = app.listen(app.get('port'), () => {

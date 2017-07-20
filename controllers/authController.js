@@ -25,14 +25,15 @@ exports.isLoggedOut = (req, res, next) => {
 };
 
 exports.login = async (req, res) => {
-	const phash = mhash("whirlpool", req.body.password);
+	const phash = await mhash("whirlpool", req.body.password);
 	const user = await db.getUser({ $and: [{email: req.body.email}, {password: phash}] });
 	if (user) {
 		req.session.email = user.email;
 		req.session.user = user.hash;
 
 		req.flash("is-success", "Successfully logged in !");
-		res.redirect('/');
+		// res.redirect('/');
+		res.render('home', { title: 'Home', user });
 	}
 	else {
 		req.flash("is-danger", "Invalid email/password. Please try again.");
@@ -41,10 +42,10 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-	req.session.user = "";
-	req.session.email = "";
+	req.session.user = null;
+	req.session.email = null;
 	req.flash('is-success', "Successfully logged out ! Come back soon");
-	res.redirect('/');
+	res.render('home', { title: 'Home' });
 };
 
 exports.forgot = async (req, res) => {

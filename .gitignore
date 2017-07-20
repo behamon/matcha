@@ -1,6 +1,5 @@
-node_modules
-variables.env
 .DS_Store
+node_modules
 .DS_Store?
 ._*
 .Spotlight-V100
