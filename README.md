@@ -2,7 +2,9 @@
 
 Dating Website Project - 42
 
-Node.js
-Express
-MongoDb (Native Driver)
+Technologies used :
 
+- Node.js
+- Express
+- MongoDb (Native Driver)
+- Jquery
